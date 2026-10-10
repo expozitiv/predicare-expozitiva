@@ -1,13 +1,22 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond } from "next/font/google";
+import { Playfair_Display, Source_Sans_3 } from "next/font/google";
 import "./globals.css";
 import Providers from "./providers";
 import { Analytics } from "@vercel/analytics/next";
 
-const cormorantGaramond = Cormorant_Garamond({
-  subsets: ["latin"],
-  weight: ["400", "600"],
-  variable: "--font-cormorant",
+const playfair = Playfair_Display({
+  subsets: ["latin", "latin-ext"],
+  weight: ["400", "500", "600"],
+  style: ["normal", "italic"],
+  variable: "--font-playfair",
+  display: "swap",
+});
+
+const sourceSans = Source_Sans_3({
+  subsets: ["latin", "latin-ext"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-source",
+  display: "swap",
 });
 
 const BASE_URL = "https://predicare-expozitiva.ro";
@@ -31,10 +40,10 @@ export const metadata: Metadata = {
       "Ateliere de predicare expozitivă în România, în parteneriat cu Charles Simeon Trust.",
     images: [
       {
-        url: "/hero-bible.jpg",
-        width: 1920,
-        height: 1080,
-        alt: "Biblie deschisă – Ateliere de predicare expozitivă",
+        url: "/og.png",
+        width: 1200,
+        height: 630,
+        alt: "Predicare expozitivă – Ateliere de predicare expozitivă",
       },
     ],
   },
@@ -43,7 +52,7 @@ export const metadata: Metadata = {
     title: SITE_NAME,
     description:
       "Ateliere de predicare expozitivă în România, în parteneriat cu Charles Simeon Trust.",
-    images: ["/hero-bible.jpg"],
+    images: ["/og.png"],
   },
 };
 
@@ -69,13 +78,14 @@ const webSiteJsonLd = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ro">
+    <html lang="ro" className={`${playfair.variable} ${sourceSans.variable}`}>
       <head>
-        <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
         <link rel="shortcut icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
         <meta name="apple-mobile-web-app-title" content="Predicare expozitiva" />
+        <meta name="theme-color" content="#1848A8" />
         <link rel="manifest" href="/site.webmanifest" />
         <script
           type="application/ld+json"
@@ -86,7 +96,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           dangerouslySetInnerHTML={{ __html: JSON.stringify(webSiteJsonLd) }}
         />
       </head>
-      <body className={cormorantGaramond.variable}>
+      <body>
         <Providers>{children}</Providers>
         <Analytics />
       </body>

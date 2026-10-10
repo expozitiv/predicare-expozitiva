@@ -6,10 +6,10 @@ Atelierele echipează predicatori, păstori și lideri de studii biblice cu inst
 
 ## 🛠 Tech Stack
 
-- **Next.js 14** (App Router) + **TypeScript**
-- **Tailwind CSS** — utility-first styling
+- **Next.js 16** (App Router) + **TypeScript**
+- **Tailwind CSS** — utility-first styling, tokenuri editoriale în `app/globals.css` (albastru royal, cupru, Playfair Display + Source Sans 3)
 - **shadcn/ui** — component library (Radix primitives)
-- **Framer Motion** — animations
+- **Framer Motion** — doar meniul mobil și lightbox-ul galeriei
 - **Formspree** — contact form backend
 - **Brevo** — newsletter / email list for subscriptions
 
@@ -25,6 +25,13 @@ app/
 ├── {route}/
 │   ├── page.tsx                # Metadata (server component)
 │   └── {Route}Page.tsx         # UI component (client component)
+
+src/components/
+├── Logo.tsx                    # Mark (5/7 linii) + Wordmark
+├── PageHeader.tsx              # Antet tipografic pe bandă albastră
+├── SiteHeader.tsx / SiteFooter.tsx
+├── SubscribeForm.tsx           # Formularul Brevo, refolosit pe / și /abonare
+└── FeaturePlugs.tsx            # Butoanele de final de pagină
 ├── events/[eventId]/
 │   ├── EventLayout.tsx         # Event context provider + nav
 │   ├── EventHub.tsx            # Event landing card
@@ -43,7 +50,8 @@ src/
 
 public/
 ├── gallery/                    # Workshop photos (marquee on /despre)
-├── hero-bible.jpg              # Hero image
+├── og.png                      # Imagine Open Graph (1200×630)
+├── favicon.svg                 # Marca „schița în șapte linii”
 └── data/
     ├── evenimente.json         # Global event registry & metadata
     └── events/{EVENT_ID}/      # Per-event data
@@ -102,7 +110,7 @@ vercel env pull .env.local
 
 ## 🖼 Gallery Photos
 
-Workshop photos are stored in `public/gallery/` and displayed as an auto-scrolling marquee on the `/despre` page. To add new photos, place them in that folder and update the count in `app/despre/DespreePage.tsx`.
+Workshop photos are stored in `public/gallery/` and listed by `app/api/gallery/route.ts`. They appear as a grid with lightbox on `/despre`; the home page uses `photo-05.jpeg` (hero), `CJ-1.jpeg` and `CJ-3.jpeg` directly. To add new photos, drop them in the folder.
 
 ## 📬 Contact Form
 

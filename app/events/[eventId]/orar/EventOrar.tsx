@@ -1,93 +1,124 @@
 'use client';
 
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { useEvent } from "../EventLayout";
-import { Clock, Mic, Coffee } from "lucide-react";
+import { useState } from "react";
+import { cn } from "@/lib/utils";
+import { useDayOffset } from "@/components/EventStatus";
+import { classifySession, SESSION_LABEL, type DaySchedule } from "@/lib/event-utils";
 
-interface Session {
-  time: string;
-  title: string;
-  speaker: string;
-  pageInPrint?: boolean;
-}
-
-interface DaySchedule {
-  day: string;
-  sessions: Session[];
-}
-
-interface OrarData {
+interface EventOrarProps {
   schedule: DaySchedule[];
+  eventDate: string;
 }
 
-const breakKeywords = ["Pauză", "Prânz", "Sosire", "Încheiere", "Anunț", "Rugăciune"];
+const DayList = ({ day }: { day: DaySchedule }) => (
+  <ol>
+    {day.sessions.map((s, i) => {
+      const kind = classifySession(s.title);
+      const isBreak = kind === "break";
+      const isGroup = kind === "group";
+      return (
+        <li
+          key={`${s.time}-${i}`}
+          className={cn(
+            "grid grid-cols-[56px_minmax(0,1fr)] gap-x-3 border-t border-rule",
+            isBreak ? "py-2" : "py-3.5",
+            isGroup && "bg-ice -mx-3 px-3 border-t-ice-line",
+          )}
+        >
+          <time
+            className={cn(
+              "tabular-nums text-[15px] pt-0.5",
+              isBreak ? "text-ink-3" : "font-semibold text-royal",
+            )}
+          >
+            {s.time}
+          </time>
+          <div className="min-w-0">
+            {!isBreak && (
+              <span className="block text-[11px] font-bold uppercase tracking-[0.12em] text-copper mb-0.5">
+                {SESSION_LABEL[kind]}
+              </span>
+            )}
+            <p className={cn("leading-snug", isBreak ? "italic text-ink-3 text-[15px]" : "font-medium text-foreground text-[16px]")}>
+              {s.title}
+            </p>
+            {s.speaker && <p className="text-sm text-ink-3 mt-0.5">{s.speaker}</p>}
+          </div>
+        </li>
+      );
+    })}
+  </ol>
+);
 
-const EventOrar = () => {
-  const { eventId } = useEvent();
-  const [schedule, setSchedule] = useState<DaySchedule[]>([]);
+const EventOrar = ({ schedule, eventDate }: EventOrarProps) => {
+  // Pe telefon, ziua curentă e deschisă implicit dacă atelierul e în desfășurare.
+  const [chosen, setChosen] = useState<number | null>(null);
+  const offset = useDayOffset(eventDate);
+  const todayIndex = offset !== null && offset >= 0 && offset < schedule.length ? offset : 0;
+  const active = chosen ?? todayIndex;
+  const setActive = setChosen;
 
-  useEffect(() => {
-    fetch(`/data/events/${eventId}/orar.json`)
-      .then((r) => r.json())
-      .then((data: OrarData) => setSchedule(data.schedule))
-      .catch(() => {});
-  }, [eventId]);
+  if (schedule.length === 0) {
+    return (
+      <section className="container-site py-12">
+        <h1 className="section-title">Orar zilnic</h1>
+        <p className="mt-4 text-ink-2">Programul va fi publicat în curând.</p>
+      </section>
+    );
+  }
 
-  const isBreak = (title: string) =>
-    breakKeywords.some((kw) => title.startsWith(kw));
+  const cols = Math.min(schedule.length, 3);
 
   return (
-    <section className="page-section space-y-6">
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-        <h2 className="section-title">Orar zilnic</h2>
-        <div className="gold-divider mt-2 mb-4" />
+    <section className="container-site py-8 md:py-12">
+      <div className="flex flex-wrap items-end justify-between gap-4 mb-6">
+        <div className="flex flex-col gap-2">
+          <p className="kicker">Programul atelierului</p>
+          <h1 className="section-title">Orar zilnic</h1>
+          <span className="copper-rule" />
+        </div>
+        <p className="text-sm text-ink-3">
+          {schedule.length} {schedule.length === 1 ? "zi" : "zile"} ·{" "}
+          {schedule.reduce((n, d) => n + d.sessions.filter((s) => classifySession(s.title) !== "break").length, 0)} sesiuni
+        </p>
+      </div>
 
-        <div className="space-y-6">
-          {schedule.map((day, di) => (
-            <motion.div
-              key={day.day}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: di * 0.08 }}
+      {/* Telefon: o zi pe ecran, cu selector */}
+      <div className="md:hidden">
+        <div className="flex gap-2 overflow-x-auto no-scrollbar -mx-6 px-6 pb-4" role="tablist" aria-label="Zilele atelierului">
+          {schedule.map((d, i) => (
+            <button
+              key={d.day}
+              role="tab"
+              aria-selected={i === active}
+              onClick={() => setActive(i)}
+              className={cn(
+                "shrink-0 min-h-[44px] px-4 rounded-sm text-sm font-semibold border transition-colors",
+                i === active ? "bg-royal text-white border-royal" : "border-rule text-ink-2 hover:border-royal",
+              )}
             >
-              <h3 className="font-display font-semibold text-lg text-foreground mb-3 flex items-center gap-2">
-                <Clock size={18} className="text-primary" />
-                {day.day}
-              </h3>
-              <div className="rounded-lg border border-border overflow-hidden">
-                {day.sessions.map((session, si) => {
-                  const isBrk = isBreak(session.title);
-                  return (
-                    <div
-                      key={si}
-                      className={`flex items-start gap-3 px-4 py-2.5 text-sm border-b border-border last:border-b-0 ${
-                        isBrk ? "bg-muted/40" : "bg-card"
-                      }`}
-                    >
-                      <span className="font-mono text-xs text-muted-foreground w-12 pt-0.5 flex-shrink-0">
-                        {session.time}
-                      </span>
-                      <div className="flex-1 min-w-0">
-                        <div className={`flex items-center gap-2 ${isBrk ? "text-muted-foreground" : "text-foreground font-medium"}`}>
-                          {isBrk ? <Coffee size={13} className="text-muted-foreground/60 flex-shrink-0" /> : null}
-                          {session.title}
-                        </div>
-                        {session.speaker && (
-                          <div className="flex items-center gap-1 text-xs text-muted-foreground mt-0.5">
-                            <Mic size={11} />
-                            {session.speaker}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </motion.div>
+              {d.day}
+            </button>
           ))}
         </div>
-      </motion.div>
+        <h2 className="font-display text-[24px] font-medium border-b-2 border-royal pb-2 mb-1">
+          {schedule[active].day}
+        </h2>
+        <DayList day={schedule[active]} />
+      </div>
+
+      {/* Desktop: zilele una lângă alta */}
+      <div
+        className="hidden md:grid gap-x-10"
+        style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}
+      >
+        {schedule.map((d) => (
+          <div key={d.day}>
+            <h2 className="font-display text-[24px] font-medium border-b-2 border-royal pb-2 mb-1">{d.day}</h2>
+            <DayList day={d} />
+          </div>
+        ))}
+      </div>
     </section>
   );
 };

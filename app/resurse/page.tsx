@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     description:
       "Ghiduri, podcasturi și materiale utile pentru predicarea expozitivă.",
     url: `${BASE_URL}/resurse`,
-    images: [{ url: `${BASE_URL}/hero-bible.jpg` }],
+    images: [{ url: `${BASE_URL}/og.png` }],
   },
 };
 

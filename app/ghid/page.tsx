@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     description:
       "Ghid complet pentru pregătirea fișei de lucru în 7 pași.",
     url: `${BASE_URL}/ghid`,
-    images: [{ url: `${BASE_URL}/hero-bible.jpg` }],
+    images: [{ url: `${BASE_URL}/og.png` }],
   },
 };
 

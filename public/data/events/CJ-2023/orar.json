@@ -1,0 +1,52 @@
+{
+  "schedule": [
+    {
+      "day": "Miercuri, 18 Octombrie",
+      "sessions": [
+        { "time": "08:30", "title": "Sosire și înregistrare", "speaker": "Mitraș Dudaș" },
+        { "time": "09:00", "title": "Bun venit", "speaker": "Florin Mureșan" },
+        { "time": "09:15", "title": "Închinare prin cântare", "speaker": "" },
+        { "time": "09:30", "title": "Sesiunea 1 – Rămânând pe linie", "speaker": "", "pageInPrint": true },
+        { "time": "10:30", "title": "Pauză", "speaker": "" },
+        { "time": "10:45", "title": "Sesiunea 2 – Structura", "speaker": "", "pageInPrint": true },
+        { "time": "11:45", "title": "Anunțuri", "speaker": "" },
+        { "time": "12:00", "title": "Prânz", "speaker": "" },
+        { "time": "13:30", "title": "Grup mic 1 – 2 Timotei 1:1-5 și 2 Timotei 1:6-12", "speaker": "" },
+        { "time": "15:15", "title": "Pauză", "speaker": "" },
+        { "time": "15:30", "title": "Sesiunea 3 – Contextul", "speaker": "", "pageInPrint": true },
+        { "time": "16:30", "title": "Pauză", "speaker": "" },
+        { "time": "16:45", "title": "Expunere 1 – 2 Timotei 1:13-18", "speaker": "", "pageInPrint": true },
+        { "time": "17:30", "title": "Rugăciune și încheiere", "speaker": "" }
+      ]
+    },
+    {
+      "day": "Joi, 19 Octombrie",
+      "sessions": [
+        { "time": "08:30", "title": "Sesiunea 4 – Textul și cadrul", "speaker": "", "pageInPrint": true },
+        { "time": "09:30", "title": "Pauză", "speaker": "" },
+        { "time": "09:45", "title": "Grup mic 2 – 2 Timotei 2:1-7 și 2 Timotei 2:8-13", "speaker": "" },
+        { "time": "11:15", "title": "Q&A – Întrebări și răspunsuri", "speaker": "" },
+        { "time": "11:45", "title": "Anunțuri", "speaker": "" },
+        { "time": "12:00", "title": "Prânz", "speaker": "" },
+        { "time": "13:30", "title": "Sesiunea 5 – Legătura cu Evanghelia", "speaker": "", "pageInPrint": true },
+        { "time": "14:30", "title": "Pauză", "speaker": "" },
+        { "time": "14:45", "title": "Grup mic 3 – 2 Timotei 2:14-19 și 2 Timotei 2:20-3:9", "speaker": "" },
+        { "time": "16:15", "title": "Pauză", "speaker": "" },
+        { "time": "16:30", "title": "Expunere 2 – 2 Timotei 2:20-3:9", "speaker": "", "pageInPrint": true },
+        { "time": "17:15", "title": "Închinare", "speaker": "" },
+        { "time": "17:30", "title": "Rugăciune și încheiere", "speaker": "" }
+      ]
+    },
+    {
+      "day": "Vineri, 20 Octombrie",
+      "sessions": [
+        { "time": "08:30", "title": "Sesiunea 6 – Linia melodică", "speaker": "", "pageInPrint": true },
+        { "time": "09:30", "title": "Grup mic 4 – 2 Timotei 3:10-17 și 2 Timotei 4:1-8", "speaker": "" },
+        { "time": "11:00", "title": "Pauză", "speaker": "" },
+        { "time": "11:15", "title": "Expunere 3 – 2 Timotei 4:9-22", "speaker": "", "pageInPrint": true },
+        { "time": "12:00", "title": "Închinare", "speaker": "" },
+        { "time": "12:15", "title": "Rugăciune și încheiere", "speaker": "" }
+      ]
+    }
+  ]
+}

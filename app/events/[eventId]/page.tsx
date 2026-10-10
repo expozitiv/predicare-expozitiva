@@ -1,6 +1,14 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import EventHub from "./EventHub";
-import { getAllEvents, getEventById, eventJsonLd } from "@/lib/events";
+import {
+  getAllEvents,
+  getEventById,
+  getEventOrar,
+  getEventParticipants,
+  eventJsonLd,
+} from "@/lib/events";
+import { groupParticipants, resolveEventLinks } from "@/lib/event-utils";
 
 const BASE_URL = "https://predicare-expozitiva.ro";
 
@@ -22,9 +30,7 @@ export async function generateMetadata({
     return { title: "Eveniment", robots: { index: false, follow: true } };
   }
 
-  const title = entry.event?.title
-    ? `${entry.title} – ${entry.event.title}`
-    : entry.title;
+  const title = entry.event ? `${entry.event.subtitle} – ${entry.title}` : entry.title;
   const description = entry.event
     ? `${entry.event.subtitle}. ${entry.event.details}`
     : `Atelier de predicare expozitivă în ${entry.location}.`;
@@ -37,30 +43,34 @@ export async function generateMetadata({
       title: `${title} | Predicare Expozitivă`,
       description,
       url: `${BASE_URL}/events/${eventId}`,
-      images: [{ url: `${BASE_URL}/hero-bible.jpg` }],
+      images: [{ url: `${BASE_URL}${entry.image ?? "/og.png"}` }],
     },
   };
 }
 
-export default async function Page({
-  params,
-}: {
-  params: Promise<{ eventId: string }>;
-}) {
+export default async function Page({ params }: { params: Promise<{ eventId: string }> }) {
   const { eventId } = await params;
   const entry = getEventById(eventId);
+  if (!entry || !entry.event) notFound();
+
+  const participants = getEventParticipants(eventId);
+  const orar = getEventOrar(eventId);
 
   return (
     <>
-      {entry && (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(eventJsonLd(entry, BASE_URL)),
-          }}
-        />
-      )}
-      <EventHub />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(eventJsonLd(entry, BASE_URL)) }}
+      />
+      <EventHub
+        entry={entry}
+        links={resolveEventLinks(entry)}
+        stats={{
+          days: orar.length,
+          participants: participants.length,
+          groups: groupParticipants(participants).length,
+        }}
+      />
     </>
   );
 }

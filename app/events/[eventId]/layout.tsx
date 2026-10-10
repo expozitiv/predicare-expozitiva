@@ -1,7 +1,22 @@
-'use client';
+import { notFound } from "next/navigation";
+import EventShell from "./EventShell";
+import { getEventById } from "@/lib/events";
+import { resolveEventLinks } from "@/lib/event-utils";
 
-import EventLayout from "./EventLayout";
+export default async function Layout({
+  children,
+  params,
+}: {
+  children: React.ReactNode;
+  params: Promise<{ eventId: string }>;
+}) {
+  const { eventId } = await params;
+  const entry = getEventById(eventId);
+  if (!entry || !entry.event) notFound();
 
-export default function Layout({ children }: { children: React.ReactNode }) {
-  return <EventLayout>{children}</EventLayout>;
+  return (
+    <EventShell entry={entry} links={resolveEventLinks(entry)}>
+      {children}
+    </EventShell>
+  );
 }

@@ -1,12 +1,11 @@
 'use client';
 
-import { useEffect } from "react";
-import { motion } from "framer-motion";
-import Link from "next/link";
+import { useEffect, useState } from "react";
 import Layout from "@/components/Layout";
-import HeroBanner from "@/components/HeroBanner";
+import PageHeader from "@/components/PageHeader";
 import FeaturePlugs from "@/components/FeaturePlugs";
-import { BookOpen, ArrowUp, FileText, Calendar } from "lucide-react";
+import { ArrowUp, FileText, Calendar } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const tocItems = [
   { id: "introducere", label: "Introducere" },
@@ -24,7 +23,11 @@ const tocItems = [
   { id: "intrebari", label: "Alte întrebări frecvente" },
 ];
 
+const allIds = tocItems.flatMap((i) => [i.id, ...(i.sub?.map((s) => s.id) ?? [])]);
+
 const GhidPage = () => {
+  const [activeId, setActiveId] = useState<string>("introducere");
+
   useEffect(() => {
     if (window.location.hash) {
       const el = document.getElementById(window.location.hash.slice(1));
@@ -32,61 +35,76 @@ const GhidPage = () => {
     }
   }, []);
 
+  // Cuprinsul urmărește secțiunea aflată în partea de sus a ecranului.
+  useEffect(() => {
+    const sections = allIds
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => el !== null);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+        if (visible[0]) setActiveId(visible[0].target.id);
+      },
+      { rootMargin: "-15% 0px -70% 0px", threshold: 0 },
+    );
+    sections.forEach((s) => observer.observe(s));
+    return () => observer.disconnect();
+  }, []);
+
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
   return (
     <Layout>
-      <HeroBanner
-        title="Ghid de Pregătire"
-        subtitle="Ghid de Pregătire a Fișei de Lucru"
+      <PageHeader
+        kicker="Resurse · Ghid de pregătire"
+        title="Ghid de pregătire a fișei de lucru"
+        intro="Cei 7 pași ai fișei, explicați pe rând, cu întrebările pe care le primim cel mai des de la participanți."
       />
 
-      <section className="page-section">
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6 }}
-        >
-          {/* Table of Contents */}
-          <div className="bg-card rounded-xl border border-border p-6 mb-12">
-            <div className="flex items-center gap-2 mb-4">
-              <BookOpen className="text-accent" size={20} />
-              <h2 className="font-display text-xl font-bold text-foreground">
-                Cuprins
-              </h2>
-            </div>
-            <div className="gold-divider mb-4" />
-            <nav className="space-y-2">
-              {tocItems.map((item) => (
-                <div key={item.id}>
+      <section className="container-site py-14 md:py-16">
+        <div className="grid gap-10 lg:grid-cols-[260px_minmax(0,1fr)] lg:gap-x-20 items-start">
+          {/* Cuprins */}
+          <nav aria-label="Cuprins" className="lg:sticky lg:top-24 flex flex-col">
+            <p className="kicker mb-3">Cuprins</p>
+            {tocItems.map((item) => (
+              <div key={item.id}>
+                <a
+                  href={`#${item.id}`}
+                  className={cn("toc-link", activeId === item.id && "toc-link-active")}
+                >
+                  {item.label}
+                </a>
+                {item.sub?.map((sub) => (
                   <a
-                    href={`#${item.id}`}
-                    className="text-primary hover:text-accent transition-colors font-medium text-sm block py-0.5"
+                    key={sub.id}
+                    href={`#${sub.id}`}
+                    className={cn("toc-link pl-7", activeId === sub.id && "toc-link-active")}
                   >
-                    {item.label}
+                    {sub.label}
                   </a>
-                  {item.sub?.map((sub) => (
-                    <a
-                      key={sub.id}
-                      href={`#${sub.id}`}
-                      className="text-muted-foreground hover:text-primary transition-colors text-sm block py-0.5 ml-6"
-                    >
-                      {sub.label}
-                    </a>
-                  ))}
-                </div>
-              ))}
-            </nav>
-          </div>
+                ))}
+              </div>
+            ))}
+            <a
+              href="https://fisa.predicare-expozitiva.ro"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-6 inline-flex items-center gap-2 text-[15px] font-semibold text-royal hover:text-copper transition-colors"
+            >
+              <FileText size={16} /> Fișa interactivă ↗
+            </a>
+          </nav>
 
-          {/* Content */}
-          <article className="prose-custom space-y-10">
+          {/* Conținut */}
+          <article className="max-w-[680px] space-y-14 [&_.section-title]:text-[30px] md:[&_.section-title]:text-[36px]">
             {/* Introducere */}
-            <section id="introducere">
+            <section className="scroll-mt-24" id="introducere">
               <h2 className="section-title">Introducere</h2>
               <div className="gold-divider mt-3 mb-6" />
-              <div className="space-y-4 text-muted-foreground leading-relaxed text-[15px]">
-                <p className="first-letter:text-3xl first-letter:font-display first-letter:font-bold first-letter:text-foreground first-letter:mr-1">
+              <div className="ghid-prose space-y-5">
+                <p>
                   Pregătirea unei fișe de lucru pentru grupul tău mic poate fi o
                   sarcină dificilă, mai ales dacă participi pentru prima dată la
                   un astfel de Seminar de predicare expozitivă. Așteptarea
@@ -109,13 +127,13 @@ const GhidPage = () => {
             </section>
 
             {/* 1. Structura */}
-            <section id="structura">
+            <section className="scroll-mt-24" id="structura">
               <h2 className="section-title">
                 1. În ce fel a structurat autorul acest pasaj?
               </h2>
               <div className="gold-divider mt-3 mb-6" />
-              <div className="space-y-4 text-muted-foreground leading-relaxed text-[15px]">
-                <p className="italic text-foreground/80 bg-card p-4 rounded-lg border border-border text-sm">
+              <div className="ghid-prose space-y-5">
+                <p className="ghid-q">
                   Te rugăm a) să arăți structura sub formă de secțiuni, alături
                   de versetele aferente și b) să explici strategiile pe care
                   le-ai folosit pentru a identifica această structură. Pe ce
@@ -162,12 +180,12 @@ const GhidPage = () => {
             </section>
 
             {/* 1.1 Genuri literare */}
-            <section id="genuri">
+            <section className="scroll-mt-24" id="genuri">
               <h3 className="section-subtitle">
                 1.1 Cum să înțelegem genurile literare sau tipurile de texte?
               </h3>
-              <div className="gold-divider mt-3 mb-6 w-14" />
-              <div className="space-y-4 text-muted-foreground leading-relaxed text-[15px]">
+              <div className="gold-divider mt-3 mb-6" />
+              <div className="ghid-prose space-y-5">
                 <p>
                   Genurile literare sunt forme de literatură care au
                   caracteristici distincte și, ca urmare, necesită anumite
@@ -207,12 +225,12 @@ const GhidPage = () => {
                   text, utilizează următoarele strategii:
                 </p>
 
-                <div className="space-y-4 bg-card rounded-lg border border-border p-5">
+                <div className="space-y-6 ghid-box ghid-box-first">
                   <div>
-                    <h4 className="font-semibold text-foreground mb-2">
+                    <h4 className="font-body text-[17px] font-semibold text-foreground mb-1">
                       Pentru discurs (sau cuvântare):
                     </h4>
-                    <p className="text-sm">
+                    <p>
                       Acest tip de text este cel mai des întâlnit în
                       discursurile din cărțile istorice ale Vechiului Testament
                       sau din epistole (care, cel mai probabil, au fost
@@ -234,10 +252,10 @@ const GhidPage = () => {
                     </p>
                   </div>
                   <div>
-                    <h4 className="font-semibold text-foreground mb-2">
+                    <h4 className="font-body text-[17px] font-semibold text-foreground mb-1">
                       Pentru narațiune (sau relatare):
                     </h4>
-                    <p className="text-sm">
+                    <p>
                       Acest tip de text se găsește mai ales în cărțile istorice
                       ale Vechiului Testament, în unele dintre cărțile
                       profetice, precum și în evanghelii și în Faptele
@@ -248,7 +266,7 @@ const GhidPage = () => {
                       Poate că cea mai întâlnită trăsătură literară este
                       intriga, care are o formă distinctivă:
                     </p>
-                    <ol className="text-sm mt-2 space-y-1 list-decimal list-inside ml-2">
+                    <ol className="mt-2 space-y-1 list-decimal list-inside ml-2">
                       <li>
                         cadrul (care include prezentarea personajelor, timpul,
                         locul)
@@ -274,10 +292,10 @@ const GhidPage = () => {
                     </ol>
                   </div>
                   <div>
-                    <h4 className="font-semibold text-foreground mb-2">
+                    <h4 className="font-body text-[17px] font-semibold text-foreground mb-1">
                       Pentru poezie:
                     </h4>
-                    <p className="text-sm">
+                    <p>
                       Acest tip de text se găsește în întreaga Biblie, dar mai
                       ales în literatura de înțelepciune, în cea profetică și în
                       cea apocaliptică. Secretul pentru a descoperi structura
@@ -317,13 +335,13 @@ const GhidPage = () => {
             </section>
 
             {/* 2. Context */}
-            <section id="context">
+            <section className="scroll-mt-24" id="context">
               <h2 className="section-title">
                 2. Cum contribuie contextul la înțelegerea acestui pasaj?
               </h2>
               <div className="gold-divider mt-3 mb-6" />
-              <div className="space-y-4 text-muted-foreground leading-relaxed text-[15px]">
-                <p className="italic text-foreground/80 bg-card p-4 rounded-lg border border-border text-sm">
+              <div className="ghid-prose space-y-5">
+                <p className="ghid-q">
                   Te rugăm să iei în considerare: a) contextul literar (pasajele
                   care sunt așezate înainte și după cel de față), b) contextul
                   istoric (împrejurările destinatarilor), c) contextul cultural
@@ -352,11 +370,11 @@ const GhidPage = () => {
                 </p>
 
                 <div className="space-y-3">
-                  <div className="bg-card rounded-lg border border-border p-4">
-                    <h4 className="font-semibold text-foreground text-sm mb-1">
+                  <div className="ghid-box">
+                    <h4 className="font-body text-[17px] font-semibold text-foreground mb-1">
                       Istoria Vechiului Testament
                     </h4>
-                    <p className="text-sm">
+                    <p>
                       Atunci când analizezi contextul istoric al unei cărți,
                       trebuie mai întâi să identifici (cât mai bine posibil)
                       autorul original și destinatarii cărții. Acest lucru poate
@@ -378,11 +396,11 @@ const GhidPage = () => {
                       cărți istorice).
                     </p>
                   </div>
-                  <div className="bg-card rounded-lg border border-border p-4">
-                    <h4 className="font-semibold text-foreground text-sm mb-1">
+                  <div className="ghid-box">
+                    <h4 className="font-body text-[17px] font-semibold text-foreground mb-1">
                       Literatura de înțelepciune
                     </h4>
-                    <p className="text-sm">
+                    <p>
                       Cărțile de înțelepciune sunt, în cea mai mare parte,
                       oarecum separate de contextul lor istoric. Cântarea
                       Cântărilor și Iov, de exemplu, nu ne oferă niciun indiciu
@@ -394,11 +412,11 @@ const GhidPage = () => {
                       interpretările pe acest context.
                     </p>
                   </div>
-                  <div className="bg-card rounded-lg border border-border p-4">
-                    <h4 className="font-semibold text-foreground text-sm mb-1">
+                  <div className="ghid-box">
+                    <h4 className="font-body text-[17px] font-semibold text-foreground mb-1">
                       Literatura profetică și apocaliptică
                     </h4>
-                    <p className="text-sm">
+                    <p>
                       Cărțile profetice și apocaliptice ale Vechiului Testament
                       sunt, în cea mai mare parte, integrate în istoria lui
                       Israel din cărțile istorice ale Vechiului Testament. S-ar
@@ -413,11 +431,11 @@ const GhidPage = () => {
                       Iuda.
                     </p>
                   </div>
-                  <div className="bg-card rounded-lg border border-border p-4">
-                    <h4 className="font-semibold text-foreground text-sm mb-1">
+                  <div className="ghid-box">
+                    <h4 className="font-body text-[17px] font-semibold text-foreground mb-1">
                       Epistolele
                     </h4>
-                    <p className="text-sm">
+                    <p>
                       Cea mai bună sursă pentru contextul istoric al unei
                       epistole este, în general, epistola însăși. Cercetează
                       începutul și sfârșitul scrisorii pentru a găsi indicii
@@ -439,11 +457,11 @@ const GhidPage = () => {
                       respective din epistolă în context.
                     </p>
                   </div>
-                  <div className="bg-card rounded-lg border border-border p-4">
-                    <h4 className="font-semibold text-foreground text-sm mb-1">
+                  <div className="ghid-box">
+                    <h4 className="font-body text-[17px] font-semibold text-foreground mb-1">
                       Evangheliile/Faptele Apostolilor
                     </h4>
-                    <p className="text-sm">
+                    <p>
                       Evangheliile sunt puțin mai complicate deoarece știm
                       foarte puțin despre autori (nu uitați că, tehnic vorbind,
                       evangheliile sunt anonime, deși tradițiile paternității
@@ -513,11 +531,11 @@ const GhidPage = () => {
             </section>
 
             {/* 3. Ideea centrala a autorului */}
-            <section id="ideea-autorului">
+            <section className="scroll-mt-24" id="ideea-autorului">
               <h2 className="section-title">3. Ideea centrală a autorului</h2>
               <div className="gold-divider mt-3 mb-6" />
-              <div className="space-y-4 text-muted-foreground leading-relaxed text-[15px]">
-                <p className="italic text-foreground/80 bg-card p-4 rounded-lg border border-border text-sm">
+              <div className="ghid-prose space-y-5">
+                <p className="ghid-q">
                   Care este ideea centrală pe care o argumentează autorul
                   înaintea ascultătorilor săi? (într-o singură propoziție
                   scurtă)
@@ -550,11 +568,11 @@ const GhidPage = () => {
             </section>
 
             {/* 4. Legatura cu Evanghelia */}
-            <section id="legatura">
+            <section className="scroll-mt-24" id="legatura">
               <h2 className="section-title">4. Legătura cu Evanghelia</h2>
               <div className="gold-divider mt-3 mb-6" />
-              <div className="space-y-4 text-muted-foreground leading-relaxed text-[15px]">
-                <p className="italic text-foreground/80 bg-card p-4 rounded-lg border border-border text-sm">
+              <div className="ghid-prose space-y-5">
+                <p className="ghid-q">
                   Care este legătura dintre acest pasaj și Evanghelia Domnului
                   Isus Cristos? Care parte a Evangheliei este avută în vedere?
                 </p>
@@ -574,11 +592,11 @@ const GhidPage = () => {
                 </p>
 
                 <div className="space-y-3">
-                  <div className="bg-card rounded-lg border border-border p-4">
-                    <h4 className="font-semibold text-foreground text-sm mb-1">
+                  <div className="ghid-box">
+                    <h4 className="font-body text-[17px] font-semibold text-foreground mb-1">
                       Referirea explicită
                     </h4>
-                    <p className="text-sm">
+                    <p>
                       Aceasta este strategia cel mai ușor de observat, deoarece,
                       uneori, Evanghelia lui Isus Cristos este chiar în pasaj,
                       fiind afirmată direct. Acest lucru se întâmplă ocazional
@@ -587,11 +605,11 @@ const GhidPage = () => {
                       autorul.
                     </p>
                   </div>
-                  <div className="bg-card rounded-lg border border-border p-4">
-                    <h4 className="font-semibold text-foreground text-sm mb-1">
+                  <div className="ghid-box">
+                    <h4 className="font-body text-[17px] font-semibold text-foreground mb-1">
                       Împlinirea profetică
                     </h4>
-                    <p className="text-sm">
+                    <p>
                       Uneori, cea mai bună legătură este făcută explicit, dar
                       făcând conexiunea cu o profeție sau cu împlinirea ei
                       găsită în altă parte în Biblie. În scrierile profetice, de
@@ -604,11 +622,11 @@ const GhidPage = () => {
                       de a face legătura cu Evanghelia.
                     </p>
                   </div>
-                  <div className="bg-card rounded-lg border border-border p-4">
-                    <h4 className="font-semibold text-foreground text-sm mb-1">
+                  <div className="ghid-box">
+                    <h4 className="font-body text-[17px] font-semibold text-foreground mb-1">
                       Traiectoria istorică
                     </h4>
-                    <p className="text-sm">
+                    <p>
                       Aceasta este una dintre strategiile cel mai greu de
                       folosit deoarece necesită o înțelegere destul de bună a
                       istoriei răscumpărării. Fiecare dintre pasajele noastre
@@ -624,11 +642,11 @@ const GhidPage = () => {
                       și învierea.
                     </p>
                   </div>
-                  <div className="bg-card rounded-lg border border-border p-4">
-                    <h4 className="font-semibold text-foreground text-sm mb-1">
+                  <div className="ghid-box">
+                    <h4 className="font-body text-[17px] font-semibold text-foreground mb-1">
                       Tipologia
                     </h4>
-                    <p className="text-sm">
+                    <p>
                       O analogie este un set larg de comparații (atât de
                       similaritate, cât și de contrast) între două concepte.
                       Tipologia este un fel de analogie folosit în literatura
@@ -648,11 +666,11 @@ const GhidPage = () => {
                       similarități și discrepanțe.
                     </p>
                   </div>
-                  <div className="bg-card rounded-lg border border-border p-4">
-                    <h4 className="font-semibold text-foreground text-sm mb-1">
+                  <div className="ghid-box">
+                    <h4 className="font-body text-[17px] font-semibold text-foreground mb-1">
                       Teme biblice teologice
                     </h4>
-                    <p className="text-sm">
+                    <p>
                       Temele sunt idei mai ample care, la rândul lor, se
                       dezvoltă progresiv de-a lungul Bibliei. În acest fel, ele
                       pot fi considerate ca urmând strategia traiectoriei
@@ -665,11 +683,11 @@ const GhidPage = () => {
                       pune din nou în legătură cu Evanghelia lui Isus Cristos.
                     </p>
                   </div>
-                  <div className="bg-card rounded-lg border border-border p-4">
-                    <h4 className="font-semibold text-foreground text-sm mb-1">
+                  <div className="ghid-box">
+                    <h4 className="font-body text-[17px] font-semibold text-foreground mb-1">
                       Învățătura bazată pe Evanghelie
                     </h4>
-                    <p className="text-sm">
+                    <p>
                       Uneori, pasajul tău gravitează în jurul unei acțiuni
                       etice. Poate fi greu de identificat Evanghelia harului în
                       pasaje care se pretează la un mesaj care reclamă
@@ -727,11 +745,11 @@ const GhidPage = () => {
             </section>
 
             {/* 5. Ideea centrala a predicii */}
-            <section id="ideea-predicii">
+            <section className="scroll-mt-24" id="ideea-predicii">
               <h2 className="section-title">5. Ideea centrală a predicii</h2>
               <div className="gold-divider mt-3 mb-6" />
-              <div className="space-y-4 text-muted-foreground leading-relaxed text-[15px]">
-                <p className="italic text-foreground/80 bg-card p-4 rounded-lg border border-border text-sm">
+              <div className="ghid-prose space-y-5">
+                <p className="ghid-q">
                   Care este ideea centrală pe care tu o vei argumenta înaintea
                   ascultătorilor tăi? (într-o singură propoziție scurtă)
                 </p>
@@ -752,11 +770,11 @@ const GhidPage = () => {
             </section>
 
             {/* 6. Aplicatii */}
-            <section id="aplicatii">
+            <section className="scroll-mt-24" id="aplicatii">
               <h2 className="section-title">6. Aplicații</h2>
               <div className="gold-divider mt-3 mb-6" />
-              <div className="space-y-4 text-muted-foreground leading-relaxed text-[15px]">
-                <p className="italic text-foreground/80 bg-card p-4 rounded-lg border border-border text-sm">
+              <div className="ghid-prose space-y-5">
+                <p className="ghid-q">
                   Ce aplicații vei face? Gândește-te la cei mântuiți și la cei
                   nemântuiți.
                 </p>
@@ -777,11 +795,11 @@ const GhidPage = () => {
             </section>
 
             {/* 7. Titlu si schita */}
-            <section id="titlu-schita">
+            <section className="scroll-mt-24" id="titlu-schita">
               <h2 className="section-title">7. Titlu și schița predicii</h2>
               <div className="gold-divider mt-3 mb-6" />
-              <div className="space-y-4 text-muted-foreground leading-relaxed text-[15px]">
-                <p className="italic text-foreground/80 bg-card p-4 rounded-lg border border-border text-sm">
+              <div className="ghid-prose space-y-5">
+                <p className="ghid-q">
                   Care este titlul predicii tale și schița predicii tale?
                 </p>
                 <p>
@@ -833,7 +851,7 @@ const GhidPage = () => {
                   îndeletnicești cu slujirea din Cuvânt, este incredibil de
                   important să gândești homiletic!
                 </p>
-                <div className="bg-card rounded-lg border border-border p-4 text-xs text-muted-foreground/80 space-y-2 mt-4">
+                <div className="ghid-box text-sm text-ink-3 space-y-2 mt-6">
                   <p>
                     <sup>1</sup> O precizare: Pe parcursul acestui document
                     folosim termenul <em>predică</em> pentru a ne referi la
@@ -858,7 +876,7 @@ const GhidPage = () => {
             </section>
 
             {/* Alte intrebari frecvente */}
-            <section id="intrebari">
+            <section className="scroll-mt-24" id="intrebari">
               <h2 className="section-title">Alte întrebări frecvente</h2>
               <div className="gold-divider mt-3 mb-6" />
               <div className="space-y-6">
@@ -890,12 +908,12 @@ const GhidPage = () => {
                 ].map((faq) => (
                   <div
                     key={faq.q}
-                    className="bg-card rounded-lg border border-border p-5"
+                    className="ghid-box"
                   >
-                    <h4 className="font-display font-semibold text-foreground mb-2">
+                    <h4 className="font-body text-[17px] font-semibold text-foreground mb-1">
                       {faq.q}
                     </h4>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
+                    <p className="text-[17px] leading-relaxed text-ink-2">
                       {faq.a}
                     </p>
                   </div>
@@ -904,10 +922,10 @@ const GhidPage = () => {
             </section>
 
             {/* Back to top */}
-            <div className="text-center pt-8">
+            <div className="pt-4">
               <button
                 onClick={scrollToTop}
-                className="inline-flex items-center gap-2 text-sm text-primary hover:text-accent transition-colors font-medium"
+                className="arrow-link"
               >
                 <ArrowUp size={16} /> Înapoi la început
               </button>
@@ -933,7 +951,7 @@ const GhidPage = () => {
               ]}
             />
           </article>
-        </motion.div>
+        </div>
       </section>
     </Layout>
   );

@@ -1,75 +1,69 @@
 'use client';
 
-import { motion } from "framer-motion";
+import Link from "next/link";
 import Layout from "@/components/Layout";
-import HeroBanner from "@/components/HeroBanner";
+import PageHeader from "@/components/PageHeader";
 import FeaturePlugs from "@/components/FeaturePlugs";
-import {
-  ExternalLink,
-  BookOpen,
-  Headphones,
-  Calendar,
-  Info,
-} from "lucide-react";
+import { Calendar, Info } from "lucide-react";
 
 const sections = [
   {
+    num: "01",
     title: "Utile",
-    icon: BookOpen,
     items: [
       {
         title: "Ghid de pregătire",
         desc: "Pregătirea unei fișe de lucru pentru grupul tău mic poate fi provocatoare, mai ales dacă este primul tău atelier. Vrem să depui efort, însă nu dorim să te simți copleșit.",
         url: "/ghid",
-        external: false,
+        tag: "Citește",
       },
       {
         title: "Fișa interactivă",
         desc: "Completează online cei 7 pași ai fișei de lucru pentru predicarea expozitivă și generează PDF.",
         url: "https://fisa.predicare-expozitiva.ro",
-        external: true,
+        tag: "Extern ↗",
       },
     ],
   },
   {
-    title: "Cărți Recomandate",
-    icon: BookOpen,
+    num: "02",
+    title: "Cărți recomandate",
     items: [
       {
-        title: "Predicarea Expozitivă - David Helm",
+        title: "Predicarea Expozitivă · David Helm",
         desc: "Principii și practică în predicarea expozitivă. O resursă esențială.",
         url: "https://www.magnagratia.org/carti/096-expository-preaching-helm/",
-        external: true,
+        tag: "Carte ↗",
       },
       {
-        title: 'Seria „9Marks: Zidind Biserici Sănătoase"',
+        title: "Predicarea convingătoare · Jeremy Meeks și David Helm",
+        desc: "Urmarea volumului „Predicarea expozitivă”: cum construiești argumente convingătoare, simplifici mesajul și îl contextualizezi pentru ascultători.",
+        url: "https://www.magnagratia.org/carti/491-persuasive-preaching-helm-meeksromanian",
+        tag: "Carte ↗",
+      },
+      {
+        title: "Seria „9Marks: Zidind Biserici Sănătoase”",
         desc: "Resurse biblice și practice pentru consolidarea bisericilor prin învățături esențiale despre sănătatea spirituală.",
         url: "https://www.magnagratia.org/serii/seria-9marks-zidind-biserici-sanatoase/",
-        external: true,
+        tag: "Serie ↗",
       },
     ],
   },
   {
+    num: "03",
     title: "Podcasturi și site-uri",
-    icon: Headphones,
     items: [
       {
         title: "Preacher's Talk",
         desc: "Discuții și interviuri despre meșteșugul predicării biblice.",
         url: "https://simeontrust.org/playlist/preachers-talk/",
-        external: true,
+        tag: "Podcast ↗",
       },
       {
         title: "The Simeon Trust",
         desc: "Echipare pentru predicarea expozitivă a Cuvântului lui Dumnezeu.",
         url: "https://simeontrust.org/",
-        external: true,
-      },
-      {
-        title: "A Storm in the Desert",
-        desc: "Un podcast care spune povestea angajamentului lui Dumnezeu de a folosi slujirea credincioasă pentru schimbări rodnice.",
-        url: "https://www.9marks.org/podcast/a-storm-in-the-desert/",
-        external: true,
+        tag: "Site ↗",
       },
     ],
   },
@@ -77,73 +71,53 @@ const sections = [
 
 const ResursePage = () => (
   <Layout>
-    <HeroBanner
-      title="Resurse"
-      subtitle="Materiale utile pentru predicarea expozitivă."
+    <PageHeader
+      kicker="Resurse"
+      title="Materiale pentru predicarea expozitivă"
+      intro="Ghidul de pregătire, fișa interactivă, cărți și podcasturi recomandate de echipa atelierelor."
     />
 
-    <section className="page-section space-y-12">
-      {sections.map((section, sIdx) => (
-        <motion.div
-          key={section.title}
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: sIdx * 0.1, duration: 0.5 }}
-        >
-          <div className="flex items-center gap-3 mb-4">
-            <section.icon className="text-accent" size={22} />
-            <h2 className="section-subtitle">{section.title}</h2>
+    <section className="container-site py-16 md:py-20 flex flex-col gap-16">
+      {sections.map((section) => (
+        <div key={section.title} className="editorial-grid">
+          <div className="col-head">
+            <p className="num-label">{section.num} — {section.title}</p>
+            <h2 className="section-title">{section.title}</h2>
+            <span className="copper-rule" />
           </div>
-          <div className="gold-divider mb-6" />
-          <div className="grid gap-4">
-            {section.items.map((item) => (
-              <a
-                key={item.title}
-                href={item.url}
-                target={item.external ? "_blank" : undefined}
-                rel={item.external ? "noopener noreferrer" : undefined}
-                className="group block bg-card rounded-lg border border-border p-5 hover:border-accent/50 hover:shadow-sm transition-all"
-              >
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <h3 className="font-display text-lg font-semibold text-foreground group-hover:text-primary transition-colors">
+          <div className="col-body">
+            {section.items.map((item, i) => {
+              const external = item.url.startsWith("http");
+              const cls = `group list-row ${i === 0 ? "list-row-first" : ""} ${
+                i === section.items.length - 1 ? "border-b border-rule" : ""
+              }`;
+              const inner = (
+                <>
+                  <span className="flex flex-col gap-1.5 min-w-0">
+                    <span className="font-display text-[22px] font-medium leading-tight group-hover:text-royal transition-colors">
                       {item.title}
-                    </h3>
-                    <p className="text-sm text-muted-foreground mt-1 leading-relaxed">
-                      {item.desc}
-                    </p>
-                  </div>
-                  {item.external && (
-                    <ExternalLink
-                      className="flex-shrink-0 text-muted-foreground group-hover:text-accent transition-colors mt-1"
-                      size={16}
-                    />
-                  )}
-                </div>
-              </a>
-            ))}
+                    </span>
+                    <span className="text-base leading-relaxed text-ink-3">{item.desc}</span>
+                  </span>
+                  <span className="kicker text-royal whitespace-nowrap">{item.tag}</span>
+                </>
+              );
+              return external ? (
+                <a key={item.url} href={item.url} target="_blank" rel="noopener noreferrer" className={cls}>{inner}</a>
+              ) : (
+                <Link key={item.url} href={item.url} className={cls}>{inner}</Link>
+              );
+            })}
           </div>
-        </motion.div>
+        </div>
       ))}
 
       <FeaturePlugs
         heading="Vrei să participi?"
         subtext="Verifică evenimentele viitoare sau află mai multe despre ateliere."
         plugs={[
-          {
-            title: "Vezi evenimente",
-            description: "",
-            to: "/evenimente",
-            icon: Calendar,
-          },
-          {
-            title: "Despre ateliere",
-            description: "",
-            to: "/despre",
-            icon: Info,
-            variant: "outline",
-          },
+          { title: "Vezi evenimente", description: "", to: "/evenimente", icon: Calendar },
+          { title: "Despre ateliere", description: "", to: "/despre", icon: Info, variant: "outline" },
         ]}
       />
     </section>

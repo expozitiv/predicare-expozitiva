@@ -1,0 +1,55 @@
+{
+  "schedule": [
+    {
+      "day": "Miercuri, 25 Septembrie",
+      "sessions": [
+        { "time": "14:00", "title": "Sosire și înregistrare", "speaker": "" },
+        { "time": "14:05", "title": "Bun venit", "speaker": "Mitraș Dudaș" },
+        { "time": "14:15", "title": "Închinare și cântare", "speaker": "" },
+        { "time": "14:30", "title": "Sesiunea 1 – Traseul pregătirii", "speaker": "Samuel Clintoc", "pageInPrint": true },
+        { "time": "15:30", "title": "Pauză", "speaker": "" },
+        { "time": "15:45", "title": "Sesiunea 2 – Structura (istorie, Vechiul Testament)", "speaker": "Josh Manley", "pageInPrint": true },
+        { "time": "16:45", "title": "Pauză", "speaker": "" },
+        { "time": "17:00", "title": "Expunere 1 – 1 Samuel 4:1-22", "speaker": "Daniel Suciu", "pageInPrint": true },
+        { "time": "17:30", "title": "Rugăciune și încheiere", "speaker": "" }
+      ]
+    },
+    {
+      "day": "Joi, 26 Septembrie",
+      "sessions": [
+        { "time": "08:45", "title": "Sosire și cântare", "speaker": "" },
+        { "time": "09:00", "title": "Sesiunea 3 – Contextul", "speaker": "Samuel Clintoc", "pageInPrint": true },
+        { "time": "10:00", "title": "Pauză", "speaker": "" },
+        { "time": "10:15", "title": "Grup mic 1 – 1 Samuel 1:1-20 și 1 Samuel 3:1-4:1", "speaker": "" },
+        { "time": "11:45", "title": "Pauză", "speaker": "" },
+        { "time": "12:00", "title": "Sesiunea 4 – Legătura cu Evanghelia", "speaker": "Josh Manley", "pageInPrint": true },
+        { "time": "13:00", "title": "Prânz", "speaker": "" },
+        { "time": "13:45", "title": "Q&A – Întrebări și răspunsuri", "speaker": "" },
+        { "time": "14:15", "title": "Anunțuri – Evenimente și resurse", "speaker": "" },
+        { "time": "14:30", "title": "Pauză", "speaker": "" },
+        { "time": "14:45", "title": "Grup mic 2 – 1 Samuel 8 și 1 Samuel 15:1-23", "speaker": "" },
+        { "time": "16:15", "title": "Pauză", "speaker": "" },
+        { "time": "16:30", "title": "Expunere 2 – 1 Samuel 12:1-25", "speaker": "Samuel Clintoc", "pageInPrint": true },
+        { "time": "17:00", "title": "Rugăciune și încheiere", "speaker": "" }
+      ]
+    },
+    {
+      "day": "Vineri, 27 Septembrie",
+      "sessions": [
+        { "time": "08:05", "title": "Sosire și cântare", "speaker": "" },
+        { "time": "08:15", "title": "Sesiunea 5 – Linia melodică", "speaker": "Samuel Clintoc", "pageInPrint": true },
+        { "time": "09:15", "title": "Pauză", "speaker": "" },
+        { "time": "09:30", "title": "Grup mic 3 – 1 Samuel 17 și 1 Samuel 20", "speaker": "" },
+        { "time": "10:45", "title": "Pauză", "speaker": "" },
+        { "time": "11:00", "title": "Sesiunea 6 – De la studiu la predică", "speaker": "Josh Manley", "pageInPrint": true },
+        { "time": "12:00", "title": "Pauză", "speaker": "" },
+        { "time": "12:15", "title": "Grup mic 4 – 1 Samuel 22 și 1 Samuel 28", "speaker": "" },
+        { "time": "13:30", "title": "Pauză", "speaker": "" },
+        { "time": "13:45", "title": "Expunere 3 – 1 Samuel 31", "speaker": "Josh Manley", "pageInPrint": true },
+        { "time": "14:15", "title": "Anunțuri – Formular de evaluare", "speaker": "" },
+        { "time": "14:20", "title": "Rugăciune și încheiere", "speaker": "" },
+        { "time": "14:30", "title": "Prânz", "speaker": "" }
+      ]
+    }
+  ]
+}

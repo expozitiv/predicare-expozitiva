@@ -1,124 +1,158 @@
 'use client';
 
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { useEvent } from "../EventLayout";
-import { Users, GraduationCap, Crown, User } from "lucide-react";
+import { useMemo, useState } from "react";
+import { Search } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { sortParticipants, type Participant } from "@/lib/event-utils";
 
-interface Participant {
-  name: string;
-  role: string;
-  group: string;
-  text1: string;
-  text2: string;
-}
+const ROLES = ["Lider", "Ucenic", "Participant"] as const;
 
-const rolePriority: Record<string, number> = {
-  Lider: 0,
-  Ucenic: 1,
-  Participant: 2,
+const normalize = (s: string) =>
+  s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+
+const roleClass: Record<string, string> = {
+  Lider: "bg-copper/15 text-copper",
+  Ucenic: "bg-ice text-royal",
+  Participant: "bg-ice/60 text-ink-3",
 };
 
-const roleIcon: Record<string, React.ElementType> = {
-  Lider: Crown,
-  Ucenic: GraduationCap,
-  Participant: User,
-};
+const RoleBadge = ({ role }: { role: string }) => (
+  <span className={cn("inline-block text-[11px] font-bold uppercase tracking-[0.1em] px-1.5 py-0.5 rounded-sm", roleClass[role] ?? roleClass.Participant)}>
+    {role}
+  </span>
+);
 
-const roleBadgeClass: Record<string, string> = {
-  Lider: "bg-accent/20 text-accent",
-  Ucenic: "bg-primary/15 text-primary",
-  Participant: "bg-muted text-muted-foreground",
-};
+const EventParticipanti = ({ participants }: { participants: Participant[] }) => {
+  const [query, setQuery] = useState("");
+  const [role, setRole] = useState<string | null>(null);
 
-const EventParticipanti = () => {
-  const { eventId } = useEvent();
-  const [participants, setParticipants] = useState<Participant[]>([]);
+  const sorted = useMemo(() => sortParticipants(participants), [participants]);
+  const q = normalize(query.trim());
+  const visible = sorted.filter(
+    (p) => (!role || p.role === role) && (!q || normalize(p.name).includes(q) || normalize(p.group).includes(q)),
+  );
 
-  useEffect(() => {
-    fetch(`/data/events/${eventId}/participants.json`)
-      .then((r) => r.json())
-      .then((data: Participant[]) => {
-        const sorted = [...data].sort(
-          (a, b) =>
-            (rolePriority[a.role] ?? 9) - (rolePriority[b.role] ?? 9) ||
-            a.name.localeCompare(b.name, "ro")
-        );
-        setParticipants(sorted);
-      })
-      .catch(() => {});
-  }, [eventId]);
+  const count = (r: string) => participants.filter((p) => p.role === r).length;
 
-  const stats = {
-    total: participants.length,
-    lideri: participants.filter((p) => p.role === "Lider").length,
-    ucenici: participants.filter((p) => p.role === "Ucenic").length,
-    participanti: participants.filter((p) => p.role === "Participant").length,
-  };
+  if (participants.length === 0) {
+    return (
+      <section className="container-site py-12">
+        <h1 className="section-title">Participanți</h1>
+        <p className="mt-4 text-ink-2">Lista participanților va fi publicată în curând.</p>
+      </section>
+    );
+  }
 
   return (
-    <section className="page-section space-y-6">
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-        <h2 className="section-title">Participanți</h2>
-        <div className="gold-divider mt-2 mb-4" />
-
-        {/* Stats */}
-        <div className="flex flex-wrap gap-4 mb-6">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Users size={16} className="text-primary" />
-            <span><strong>{stats.total}</strong> total</span>
-          </div>
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Crown size={16} className="text-accent" />
-            <span>{stats.lideri} lideri</span>
-          </div>
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <GraduationCap size={16} className="text-primary" />
-            <span>{stats.ucenici} ucenici</span>
-          </div>
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <User size={16} />
-            <span>{stats.participanti} participanți</span>
-          </div>
+    <section className="container-site py-8 md:py-12">
+      <div className="flex flex-wrap items-end justify-between gap-6 mb-8">
+        <div className="flex flex-col gap-2">
+          <p className="kicker">Cine participă</p>
+          <h1 className="section-title">Participanți</h1>
+          <span className="copper-rule" />
         </div>
+        <dl className="flex gap-6 sm:gap-8">
+          {[
+            { label: "total", value: participants.length },
+            { label: "lideri", value: count("Lider") },
+            { label: "ucenici", value: count("Ucenic") },
+            { label: "participanți", value: count("Participant") },
+          ].map((s) => (
+            <div key={s.label}>
+              <dd className="font-display text-[28px] leading-none tabular-nums">{s.value}</dd>
+              <dt className="kicker mt-1">{s.label}</dt>
+            </div>
+          ))}
+        </dl>
+      </div>
 
-        {/* Table */}
-        <div className="overflow-x-auto rounded-lg border border-border">
-          <table className="w-full text-sm">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-6">
+        <label className="relative block flex-1 max-w-md">
+          <span className="sr-only">Caută un nume sau un grup</span>
+          <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-3" aria-hidden="true" />
+          <input
+            type="search"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Caută un nume sau un grup…"
+            className="w-full h-11 pl-10 pr-3 rounded-sm border border-ink bg-white text-[15px] placeholder:text-ink-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2"
+          />
+        </label>
+        <div className="flex gap-2 overflow-x-auto no-scrollbar" role="group" aria-label="Filtrează după rol">
+          <button
+            onClick={() => setRole(null)}
+            aria-pressed={role === null}
+            className={cn(
+              "shrink-0 min-h-[44px] px-4 rounded-sm text-sm font-semibold border transition-colors",
+              role === null ? "bg-royal text-white border-royal" : "border-rule text-ink-2 hover:border-royal",
+            )}
+          >
+            Toți
+          </button>
+          {ROLES.map((r) => (
+            <button
+              key={r}
+              onClick={() => setRole(role === r ? null : r)}
+              aria-pressed={role === r}
+              className={cn(
+                "shrink-0 min-h-[44px] px-4 rounded-sm text-sm font-semibold border transition-colors",
+                role === r ? "bg-royal text-white border-royal" : "border-rule text-ink-2 hover:border-royal",
+              )}
+            >
+              {r === "Participant" ? "Participanți" : `${r}i`}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {visible.length === 0 ? (
+        <p className="text-ink-2">Niciun rezultat{query ? ` pentru „${query}”` : ""}.</p>
+      ) : (
+        <>
+          {/* Desktop: tabel */}
+          <table className="hidden md:table w-full text-[15px]">
             <thead>
-              <tr className="bg-muted">
-                <th className="text-left px-4 py-2.5 font-semibold text-foreground">Nume</th>
-                <th className="text-left px-4 py-2.5 font-semibold text-foreground">Rol</th>
-                <th className="text-left px-4 py-2.5 font-semibold text-foreground hidden md:table-cell">Grup</th>
-                <th className="text-left px-4 py-2.5 font-semibold text-foreground hidden lg:table-cell">Text 1</th>
-                <th className="text-left px-4 py-2.5 font-semibold text-foreground hidden lg:table-cell">Text 2</th>
+              <tr className="border-b-2 border-royal text-left">
+                <th className="kicker font-semibold py-2.5 pr-4">Nume</th>
+                <th className="kicker font-semibold py-2.5 pr-4">Rol</th>
+                <th className="kicker font-semibold py-2.5 pr-4">Grup</th>
+                <th className="kicker font-semibold py-2.5 pr-4">Pasajul 1</th>
+                <th className="kicker font-semibold py-2.5">Pasajul 2</th>
               </tr>
             </thead>
             <tbody>
-              {participants.map((p, i) => {
-                const RoleIcon = roleIcon[p.role] || User;
-                return (
-                  <tr
-                    key={i}
-                    className="border-t border-border hover:bg-muted/50 transition-colors"
-                  >
-                    <td className="px-4 py-2.5 font-medium text-foreground">{p.name}</td>
-                    <td className="px-4 py-2.5">
-                      <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${roleBadgeClass[p.role] || ""}`}>
-                        <RoleIcon size={12} />
-                        {p.role}
-                      </span>
-                    </td>
-                    <td className="px-4 py-2.5 text-muted-foreground hidden md:table-cell">{p.group}</td>
-                    <td className="px-4 py-2.5 text-muted-foreground text-xs hidden lg:table-cell">{p.text1 || "—"}</td>
-                    <td className="px-4 py-2.5 text-muted-foreground text-xs hidden lg:table-cell">{p.text2 || "—"}</td>
-                  </tr>
-                );
-              })}
+              {visible.map((p) => (
+                <tr key={p.name} className="border-t border-rule hover:bg-ice/50 transition-colors">
+                  <td className="py-2.5 pr-4 font-medium text-foreground">{p.name}</td>
+                  <td className="py-2.5 pr-4"><RoleBadge role={p.role} /></td>
+                  <td className="py-2.5 pr-4 text-ink-2">{p.group}</td>
+                  <td className="py-2.5 pr-4 text-ink-3 tabular-nums">{p.text1 || "—"}</td>
+                  <td className="py-2.5 text-ink-3 tabular-nums">{p.text2 || "—"}</td>
+                </tr>
+              ))}
             </tbody>
           </table>
-        </div>
-      </motion.div>
+
+          {/* Telefon: listă */}
+          <ol className="md:hidden">
+            {visible.map((p, i) => (
+              <li key={p.name} className={cn("py-3 flex flex-col gap-1", i === 0 ? "border-t-2 border-royal" : "border-t border-rule")}>
+                <div className="flex items-center justify-between gap-3">
+                  <span className="font-medium text-[16px]">{p.name}</span>
+                  <RoleBadge role={p.role} />
+                </div>
+                <div className="flex flex-wrap gap-x-3 text-[13px] text-ink-3">
+                  <span>Grupul {p.group}</span>
+                  {(p.text1 || p.text2) && (
+                    <span className="tabular-nums">{[p.text1, p.text2].filter(Boolean).join(" · ")}</span>
+                  )}
+                </div>
+              </li>
+            ))}
+          </ol>
+          <p className="mt-4 text-sm text-ink-3">{visible.length} din {participants.length}</p>
+        </>
+      )}
     </section>
   );
 };

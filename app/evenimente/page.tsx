@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     description:
       "Vezi calendarul atelierelor de predicare expozitivă din România.",
     url: `${BASE_URL}/evenimente`,
-    images: [{ url: `${BASE_URL}/hero-bible.jpg` }],
+    images: [{ url: `${BASE_URL}/og.png` }],
   },
 };
 

@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     description:
       "Contactează echipa pentru întrebări despre atelierele de predicare expozitivă.",
     url: `${BASE_URL}/contact`,
-    images: [{ url: `${BASE_URL}/hero-bible.jpg` }],
+    images: [{ url: `${BASE_URL}/og.png` }],
   },
 };
 

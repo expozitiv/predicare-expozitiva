@@ -7,16 +7,16 @@ export default {
   theme: {
     container: {
       center: true,
-      padding: "2rem",
+      padding: "1.5rem",
       screens: {
-        "2xl": "1400px",
+        xl: "1168px",
+        "2xl": "1168px",
       },
     },
     extend: {
       fontFamily: {
-        display: ['"Playfair Display"', 'Georgia', 'serif'],
-        body: ['"Inter"', 'system-ui', 'sans-serif'],
-        cormorant: ['var(--font-cormorant)', 'Georgia', 'serif'],
+        display: ["var(--font-playfair)", "Georgia", "serif"],
+        body: ["var(--font-source)", "system-ui", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -52,27 +52,35 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        sidebar: {
-          DEFAULT: "hsl(var(--sidebar-background))",
-          foreground: "hsl(var(--sidebar-foreground))",
-          primary: "hsl(var(--sidebar-primary))",
-          "primary-foreground": "hsl(var(--sidebar-primary-foreground))",
-          accent: "hsl(var(--sidebar-accent))",
-          "accent-foreground": "hsl(var(--sidebar-accent-foreground))",
-          border: "hsl(var(--sidebar-border))",
-          ring: "hsl(var(--sidebar-ring))",
+        /* Paleta editorială */
+        royal: {
+          DEFAULT: "#1848A8",
+          deep: "#0F3580",
+          light: "#B9C7E6",
+          pale: "#DCE5F7",
+          soft: "#7E98D1",
+          line: "#2A55B0",
         },
-        copper: "hsl(var(--copper))",
-        "copper-light": "hsl(var(--copper-light))",
-        "navy-dark": "hsl(var(--navy-dark))",
-        "navy-light": "hsl(var(--navy-light))",
-        "warm-bg": "hsl(var(--warm-bg))",
-        cream: "hsl(var(--cream))",
+        copper: {
+          DEFAULT: "#C9683F",
+          light: "#E8A27A",
+        },
+        ice: {
+          DEFAULT: "#EEF3FB",
+          line: "#C5D0E6",
+        },
+        ink: {
+          DEFAULT: "#0F1B33",
+          2: "#2A3650",
+          3: "#5B6478",
+        },
+        rule: "#D7DEEA",
+        cream: "#F4E6CC",
       },
       borderRadius: {
         lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        md: "var(--radius)",
+        sm: "var(--radius)",
       },
       keyframes: {
         "accordion-down": {
@@ -83,20 +91,10 @@ export default {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
-        "fade-in-up": {
-          from: { opacity: "0", transform: "translateY(20px)" },
-          to: { opacity: "1", transform: "translateY(0)" },
-        },
-        marquee: {
-          "0%": { transform: "translateX(0)" },
-          "100%": { transform: "translateX(-50%)" },
-        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "fade-in-up": "fade-in-up 0.6s ease-out forwards",
-        marquee: "marquee 30s linear infinite",
       },
     },
   },

@@ -1,0 +1,53 @@
+{
+  "schedule": [
+    {
+      "day": "Miercuri, 19 Martie",
+      "sessions": [
+        { "time": "14:00", "title": "Sosire și înregistrare", "speaker": "" },
+        { "time": "14:15", "title": "Bun venit", "speaker": "Mitraș Dudaș" },
+        { "time": "14:30", "title": "Sesiunea 1 – Traseul pregătirii", "speaker": "Diego Lopes", "pageInPrint": true },
+        { "time": "15:30", "title": "Pauză", "speaker": "" },
+        { "time": "15:45", "title": "Sesiunea 2 – Structura", "speaker": "Samuel Clintoc", "pageInPrint": true },
+        { "time": "16:45", "title": "Pauză", "speaker": "" },
+        { "time": "17:00", "title": "Expunere 1 – Ioan 1:19-51", "speaker": "Ovidiu Hanc", "pageInPrint": true },
+        { "time": "17:30", "title": "Încheiere", "speaker": "" }
+      ]
+    },
+    {
+      "day": "Joi, 20 Martie",
+      "sessions": [
+        { "time": "09:00", "title": "Sosire", "speaker": "" },
+        { "time": "09:15", "title": "Sesiunea 3 – Contextul", "speaker": "Diego Lopes", "pageInPrint": true },
+        { "time": "10:15", "title": "Pauză", "speaker": "" },
+        { "time": "10:30", "title": "Grup mic 1 – Ioan 1:1-18 și Ioan 2:1-12", "speaker": "" },
+        { "time": "12:00", "title": "Prânz", "speaker": "" },
+        { "time": "12:45", "title": "Anunțuri – Anunțuri de instruire", "speaker": "" },
+        { "time": "12:55", "title": "Q&A – Întrebări și răspunsuri", "speaker": "Toți vorbitorii" },
+        { "time": "13:25", "title": "Pauză", "speaker": "" },
+        { "time": "13:30", "title": "Sesiunea 4 – Legătura cu Evanghelia", "speaker": "Samuel Clintoc", "pageInPrint": true },
+        { "time": "14:30", "title": "Pauză", "speaker": "" },
+        { "time": "14:45", "title": "Grup mic 2 – Ioan 4:1-26 și Ioan 7:1-44", "speaker": "" },
+        { "time": "16:15", "title": "Pauză", "speaker": "" },
+        { "time": "16:30", "title": "Expunere 2 – Ioan 10:1-21", "speaker": "Samuel Clintoc", "pageInPrint": true },
+        { "time": "17:00", "title": "Încheiere", "speaker": "" }
+      ]
+    },
+    {
+      "day": "Vineri, 21 Martie",
+      "sessions": [
+        { "time": "09:00", "title": "Sosire", "speaker": "" },
+        { "time": "09:15", "title": "Sesiunea 5 – Linia melodică", "speaker": "Diego Lopes", "pageInPrint": true },
+        { "time": "10:15", "title": "Pauză", "speaker": "" },
+        { "time": "10:30", "title": "Grup mic 3 – Ioan 11:1-27 și Ioan 12:20-36", "speaker": "" },
+        { "time": "12:00", "title": "Prânz", "speaker": "" },
+        { "time": "12:45", "title": "Sesiunea 6 – Aplicația", "speaker": "Samuel Clintoc", "pageInPrint": true },
+        { "time": "13:45", "title": "Anunț – Formulare de feedback", "speaker": "" },
+        { "time": "14:00", "title": "Pauză", "speaker": "" },
+        { "time": "14:15", "title": "Grup mic 4 – Ioan 17 și Ioan 20:11-18", "speaker": "" },
+        { "time": "15:45", "title": "Pauză", "speaker": "" },
+        { "time": "16:00", "title": "Expunere 3 – Ioan 21", "speaker": "Diego Lopes", "pageInPrint": true },
+        { "time": "16:30", "title": "Rugăciune și feedback", "speaker": "" }
+      ]
+    }
+  ]
+}

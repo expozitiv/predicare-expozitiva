@@ -1,11 +1,77 @@
 [
   {
+    "date": "2027-03-03",
+    "dateEnd": "2027-03-05",
+    "title": "CST Cluj 2027",
+    "location": "Cluj-Napoca",
+    "type": "atelier",
+    "link": "/events/CJ-2027",
+    "eventId": "CJ-2027",
+    "image": "/gallery/CJ-1.jpeg",
+    "urlInregistrare": "",
+    "urlFeedback": "",
+    "event": {
+      "title": "Atelier de predicare expozitivă",
+      "subtitle": "Predicare din poezie · Psalmi",
+      "details": "3–5 martie 2027 | Biserica Unu Unu, Cluj-Napoca"
+    },
+    "links": [
+      {
+        "name": "Înregistrare",
+        "url": "$inregistrare",
+        "icon": "user-plus",
+        "active": true
+      },
+      {
+        "name": "Listă participanți",
+        "url": "participanti",
+        "icon": "file-text",
+        "active": false
+      },
+      {
+        "name": "Grupe de lucru",
+        "url": "grupe",
+        "icon": "users",
+        "active": false
+      },
+      {
+        "name": "Orar zilnic",
+        "url": "orar",
+        "icon": "calendar-days",
+        "active": false
+      },
+      {
+        "name": "Ghid de pregătire",
+        "url": "/ghid",
+        "icon": "book-open",
+        "active": true
+      },
+      {
+        "name": "Mapă participant PDF",
+        "url": "handout",
+        "icon": "file-down",
+        "active": false
+      },
+      {
+        "name": "Feedback",
+        "url": "$feedback",
+        "icon": "message-square",
+        "active": false
+      }
+    ]
+  },
+  {
     "date": "2026-03-10",
     "dateEnd": "2026-03-12",
     "title": "CST Brăila 2026",
     "location": "Brăila",
     "type": "atelier",
-    "link": "mailto:fauriosua@gmail.com?subject=Inscriere%20seminar%20CST%20Braila%202026"
+    "link": "mailto:fauriosua@gmail.com?subject=Inscriere%20seminar%20CST%20Braila%202026",
+    "event": {
+      "title": "Atelier de predicare expozitivă",
+      "subtitle": "Predicare din profeți · Amos",
+      "details": "10–12 martie 2026 | Biserica Sfânta Treime, Brăila"
+    }
   },
   {
     "date": "2026-03-04",
@@ -15,21 +81,245 @@
     "type": "atelier",
     "link": "/events/CJ-2026",
     "eventId": "CJ-2026",
+    "image": "/gallery/CJ-6.jpeg",
     "urlInregistrare": "https://tally.so/r/PLACEHOLDER_INREGISTRARE",
     "urlFeedback": "https://tally.so/r/PLACEHOLDER_FEEDBACK",
     "event": {
       "title": "Atelier de predicare expozitivă",
-      "subtitle": "Predicare din profeți - AMOS",
-      "details": "4-6 martie 2026 | Biserica Unu Unu, Cluj-Napoca"
+      "subtitle": "Predicare din profeți · Amos",
+      "details": "4–6 martie 2026 | Biserica Unu Unu, Cluj-Napoca"
     },
     "links": [
-      { "name": "Înregistrare", "url": "$inregistrare", "icon": "user-plus", "active": true },
-      { "name": "Listă participanți", "url": "participanti", "icon": "file-text", "active": true },
-      { "name": "Grupe de lucru", "url": "grupe", "icon": "users", "active": true },
-      { "name": "Orar zilnic", "url": "orar", "icon": "calendar-days", "active": true },
-      { "name": "Ghid de pregătire", "url": "/ghid", "icon": "book-open", "active": true },
-      { "name": "Mapă participant PDF", "url": "handout", "icon": "file-down", "active": false },
-      { "name": "Feedback", "url": "$feedback", "icon": "message-square", "active": true }
+      {
+        "name": "Înregistrare",
+        "url": "$inregistrare",
+        "icon": "user-plus",
+        "active": true
+      },
+      {
+        "name": "Listă participanți",
+        "url": "participanti",
+        "icon": "file-text",
+        "active": true
+      },
+      {
+        "name": "Grupe de lucru",
+        "url": "grupe",
+        "icon": "users",
+        "active": true
+      },
+      {
+        "name": "Orar zilnic",
+        "url": "orar",
+        "icon": "calendar-days",
+        "active": true
+      },
+      {
+        "name": "Ghid de pregătire",
+        "url": "/ghid",
+        "icon": "book-open",
+        "active": true
+      },
+      {
+        "name": "Mapă participant PDF",
+        "url": "handout",
+        "icon": "file-down",
+        "active": false
+      },
+      {
+        "name": "Feedback",
+        "url": "$feedback",
+        "icon": "message-square",
+        "active": true
+      }
+    ]
+  },
+  {
+    "date": "2025-03-25",
+    "dateEnd": "2025-03-27",
+    "dateApprox": true,
+    "title": "CST Brăila 2025",
+    "location": "Brăila",
+    "type": "atelier",
+    "link": "",
+    "event": {
+      "title": "Atelier de predicare expozitivă",
+      "subtitle": "Predicare din Evanghelii · Ioan",
+      "details": "martie 2025 | Biserica Sfânta Treime, Brăila"
+    }
+  },
+  {
+    "date": "2025-03-19",
+    "dateEnd": "2025-03-21",
+    "title": "CST Cluj 2025",
+    "location": "Cluj-Napoca",
+    "type": "atelier",
+    "link": "/events/CJ-2025",
+    "eventId": "CJ-2025",
+    "event": {
+      "title": "Atelier de predicare expozitivă",
+      "subtitle": "Predicare din Evanghelii · Ioan",
+      "details": "19–21 martie 2025 | Biserica Unu Unu, Cluj-Napoca"
+    },
+    "links": [
+      {
+        "name": "Înregistrare",
+        "url": "$inregistrare",
+        "icon": "user-plus",
+        "active": false
+      },
+      {
+        "name": "Listă participanți",
+        "url": "participanti",
+        "icon": "file-text",
+        "active": false
+      },
+      {
+        "name": "Grupe de lucru",
+        "url": "grupe",
+        "icon": "users",
+        "active": false
+      },
+      {
+        "name": "Orar zilnic",
+        "url": "orar",
+        "icon": "calendar-days",
+        "active": true
+      },
+      {
+        "name": "Ghid de pregătire",
+        "url": "/ghid",
+        "icon": "book-open",
+        "active": true
+      },
+      {
+        "name": "Mapă participant PDF",
+        "url": "handout",
+        "icon": "file-down",
+        "active": false
+      },
+      {
+        "name": "Feedback",
+        "url": "$feedback",
+        "icon": "message-square",
+        "active": false
+      }
+    ]
+  },
+  {
+    "date": "2024-09-25",
+    "dateEnd": "2024-09-27",
+    "title": "CST Cluj 2024",
+    "location": "Cluj-Napoca",
+    "type": "atelier",
+    "link": "/events/CJ-2024",
+    "eventId": "CJ-2024",
+    "event": {
+      "title": "Atelier de predicare expozitivă",
+      "subtitle": "Predicare din narațiune · 1 Samuel",
+      "details": "25–27 septembrie 2024 | Biserica Unu Unu, Cluj-Napoca"
+    },
+    "links": [
+      {
+        "name": "Înregistrare",
+        "url": "$inregistrare",
+        "icon": "user-plus",
+        "active": false
+      },
+      {
+        "name": "Listă participanți",
+        "url": "participanti",
+        "icon": "file-text",
+        "active": false
+      },
+      {
+        "name": "Grupe de lucru",
+        "url": "grupe",
+        "icon": "users",
+        "active": false
+      },
+      {
+        "name": "Orar zilnic",
+        "url": "orar",
+        "icon": "calendar-days",
+        "active": true
+      },
+      {
+        "name": "Ghid de pregătire",
+        "url": "/ghid",
+        "icon": "book-open",
+        "active": true
+      },
+      {
+        "name": "Mapă participant PDF",
+        "url": "handout",
+        "icon": "file-down",
+        "active": false
+      },
+      {
+        "name": "Feedback",
+        "url": "$feedback",
+        "icon": "message-square",
+        "active": false
+      }
+    ]
+  },
+  {
+    "date": "2023-10-18",
+    "dateEnd": "2023-10-20",
+    "title": "CST Cluj 2023",
+    "location": "Cluj-Napoca",
+    "type": "atelier",
+    "link": "/events/CJ-2023",
+    "eventId": "CJ-2023",
+    "event": {
+      "title": "Atelier de predicare expozitivă",
+      "subtitle": "Predicare din epistole · 2 Timotei",
+      "details": "18–20 octombrie 2023 | Biserica Unu Unu, Cluj-Napoca"
+    },
+    "links": [
+      {
+        "name": "Înregistrare",
+        "url": "$inregistrare",
+        "icon": "user-plus",
+        "active": false
+      },
+      {
+        "name": "Listă participanți",
+        "url": "participanti",
+        "icon": "file-text",
+        "active": false
+      },
+      {
+        "name": "Grupe de lucru",
+        "url": "grupe",
+        "icon": "users",
+        "active": false
+      },
+      {
+        "name": "Orar zilnic",
+        "url": "orar",
+        "icon": "calendar-days",
+        "active": true
+      },
+      {
+        "name": "Ghid de pregătire",
+        "url": "/ghid",
+        "icon": "book-open",
+        "active": true
+      },
+      {
+        "name": "Mapă participant PDF",
+        "url": "handout",
+        "icon": "file-down",
+        "active": false
+      },
+      {
+        "name": "Feedback",
+        "url": "$feedback",
+        "icon": "message-square",
+        "active": false
+      }
     ]
   }
 ]

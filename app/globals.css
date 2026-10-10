@@ -1,93 +1,53 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600&family=Inter:wght@300;400;500;600;700&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/*
+ * Predicare Expozitivă — sistemul editorial (octombrie 2026).
+ * Fond alb, albastru royal ca prezență, cupru ca accent, linii în loc de carduri.
+ * Playfair Display (titluri, citate) peste Source Sans 3 (text, UI).
+ * Valorile HSL alimentează componentele shadcn; culorile cu nume (royal, copper…)
+ * sunt în tailwind.config.ts.
+ */
 @layer base {
   :root {
-    --background: 220 20% 97%;
-    --foreground: 220 25% 12%;
+    --background: 0 0% 100%;
+    --foreground: 220 55% 13%;
 
-    --card: 220 15% 95%;
-    --card-foreground: 220 25% 12%;
+    --card: 217 62% 96%;
+    --card-foreground: 220 55% 13%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 220 25% 12%;
+    --popover-foreground: 220 55% 13%;
 
-    --primary: 220 45% 25%;
-    --primary-foreground: 220 20% 97%;
+    --primary: 220 75% 38%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 220 15% 92%;
-    --secondary-foreground: 220 25% 12%;
+    --secondary: 217 62% 96%;
+    --secondary-foreground: 220 55% 13%;
 
-    --muted: 220 12% 93%;
-    --muted-foreground: 220 10% 46%;
+    --muted: 217 62% 96%;
+    --muted-foreground: 221 14% 41%;
 
-    --accent: 16 65% 55%;
+    --accent: 18 56% 52%;
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 72% 45%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 220 15% 88%;
-    --input: 220 15% 88%;
-    --ring: 220 45% 25%;
+    --border: 218 31% 88%;
+    --input: 220 55% 13%;
+    --ring: 220 75% 38%;
 
-    --radius: 0.5rem;
-
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
-
-    /* Custom tokens */
-    --copper: 16 65% 55%;
-    --copper-light: 16 50% 72%;
-    --navy-dark: 220 50% 16%;
-    --navy-light: 220 30% 38%;
-    --warm-bg: 220 15% 95%;
-    --cream: 220 20% 97%;
+    --radius: 3px;
   }
 
-  .dark {
-    --background: 220 25% 7%;
-    --foreground: 220 15% 90%;
-    --card: 220 25% 11%;
-    --card-foreground: 220 15% 90%;
-    --popover: 220 25% 11%;
-    --popover-foreground: 220 15% 90%;
-    --primary: 220 40% 60%;
-    --primary-foreground: 220 25% 7%;
-    --secondary: 220 20% 16%;
-    --secondary-foreground: 220 15% 90%;
-    --muted: 220 20% 16%;
-    --muted-foreground: 220 10% 60%;
-    --accent: 16 65% 55%;
-    --accent-foreground: 0 0% 100%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 220 20% 18%;
-    --input: 220 20% 18%;
-    --ring: 220 40% 60%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
-  }
-}
-
-@layer base {
   * {
     @apply border-border;
+  }
+
+  html {
+    text-wrap: pretty;
   }
 
   body {
@@ -97,57 +57,123 @@
   h1, h2, h3, h4 {
     @apply font-display;
   }
+
+  ::selection {
+    background: hsl(var(--accent) / 0.25);
+  }
+
+  :focus-visible {
+    outline: 2px solid hsl(var(--accent));
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
 }
 
 @layer components {
-  .section-title {
-    @apply font-display text-2xl md:text-3xl font-bold text-foreground tracking-tight;
-  }
-
-  .section-subtitle {
-    @apply font-display text-lg md:text-xl font-semibold text-foreground;
-  }
-
-  .gold-divider {
-    @apply w-16 h-0.5 bg-accent rounded-full;
+  /* Lățimea de pagină: 1120px + 24px lateral. */
+  .container-site {
+    @apply max-w-[1168px] mx-auto px-6;
   }
 
   .page-section {
-    @apply max-w-3xl mx-auto px-5 py-8 md:py-12;
+    @apply container-site py-12 md:py-16;
   }
 
-  /* Subtle dot pattern for alternating sections */
-  .section-dots {
-    background-image: radial-gradient(hsl(var(--border)) 1px, transparent 1px);
-    background-size: 24px 24px;
+  /* Tipografie */
+  .kicker {
+    @apply text-xs font-semibold uppercase tracking-[0.14em] text-ink-3;
   }
 
-  /* Soft diagonal lines */
-  .section-lines {
-    background-image: repeating-linear-gradient(
-      -45deg,
-      transparent,
-      transparent 14px,
-      hsl(var(--border) / 0.4) 14px,
-      hsl(var(--border) / 0.4) 15px
-    );
+  .num-label {
+    @apply text-[13px] font-bold uppercase tracking-[0.12em] text-royal tabular-nums;
   }
 
-  /* Top/bottom fade vignette for depth */
-  .section-vignette {
-    position: relative;
+  .section-title {
+    @apply font-display text-[32px] md:text-[40px] leading-[1.1] font-medium tracking-[-0.015em] text-foreground;
   }
-  .section-vignette::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background: linear-gradient(
-      to bottom,
-      hsl(var(--background) / 0.6) 0%,
-      transparent 15%,
-      transparent 85%,
-      hsl(var(--background) / 0.6) 100%
-    );
+
+  .section-subtitle {
+    @apply font-display text-2xl md:text-[28px] leading-tight font-medium text-foreground;
+  }
+
+  .lede {
+    @apply font-display text-[22px] md:text-2xl leading-[1.45] text-foreground;
+  }
+
+  .prose-body {
+    @apply text-[17px] md:text-lg leading-[1.6] text-ink-2;
+  }
+
+  /* Linia scurtă cuprie de sub titluri (fostul gold-divider). */
+  .copper-rule,
+  .gold-divider {
+    @apply block w-12 h-0.5 bg-copper;
+  }
+
+  /* Grila editorială: titlu stânga, conținut dreapta. */
+  .editorial-grid {
+    @apply grid gap-y-6 md:grid-cols-12 md:gap-x-8;
+  }
+  .editorial-grid > .col-head {
+    @apply md:col-span-4 flex flex-col gap-4;
+  }
+  .editorial-grid > .col-body {
+    @apply md:col-start-6 md:col-span-7;
+  }
+
+  /* Rând de listă: linie sus, fără fundal. */
+  .list-row {
+    @apply flex items-baseline justify-between gap-6 py-5 border-t border-rule;
+  }
+  .list-row-first {
+    @apply border-t-2 border-royal;
+  }
+
+  /* Link cu săgeată */
+  .arrow-link {
+    @apply inline-flex items-center gap-2 min-h-[44px] text-[15px] font-semibold text-royal border-b border-royal transition-colors hover:text-copper hover:border-copper;
+  }
+
+  /* Ghid: citatul de pe fișă și blocurile de definiții. */
+  .ghid-q {
+    @apply font-display italic text-lg md:text-xl leading-relaxed text-royal-deep border-l-2 border-copper pl-6 py-1;
+  }
+  .ghid-box {
+    @apply border-t border-rule pt-4 mt-2;
+  }
+  .ghid-box-first {
+    @apply border-t-2 border-royal;
+  }
+  .ghid-prose p {
+    @apply text-[17px] md:text-lg leading-[1.65] text-ink-2;
+  }
+  .ghid-prose strong {
+    @apply text-foreground;
+  }
+  .ghid-prose ul, .ghid-prose ol {
+    @apply text-[17px] md:text-lg leading-[1.65] text-ink-2;
+  }
+
+  /* Cuprins fix pe desktop */
+  .toc-link {
+    @apply block text-[15px] leading-snug py-1.5 pl-3.5 border-l border-rule text-ink-3 transition-colors hover:text-foreground hover:border-royal;
+  }
+  .toc-link-active {
+    @apply text-royal border-l-2 border-copper font-semibold;
+  }
+}
+
+@layer utilities {
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
   }
 }

@@ -1,98 +1,111 @@
 'use client';
 
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { useEvent } from "../EventLayout";
-import { Crown, GraduationCap, User } from "lucide-react";
+import { useMemo, useState } from "react";
+import { Search } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { groupParticipants, type Participant } from "@/lib/event-utils";
 
-interface Participant {
-  name: string;
-  role: string;
-  group: string;
-  text1: string;
-  text2: string;
-}
+const normalize = (s: string) =>
+  s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
 
-interface Group {
-  leader: string;
-  members: Participant[];
-}
+const RoleBadge = ({ role }: { role: string }) => {
+  if (role === "Participant") return null;
+  return (
+    <span
+      className={cn(
+        "text-[11px] font-bold uppercase tracking-[0.1em] px-1.5 py-0.5 rounded-sm",
+        role === "Lider" ? "bg-copper/15 text-copper" : "bg-ice text-royal",
+      )}
+    >
+      {role}
+    </span>
+  );
+};
 
-const EventGrupe = () => {
-  const { eventId } = useEvent();
-  const [groups, setGroups] = useState<Group[]>([]);
+const EventGrupe = ({ participants }: { participants: Participant[] }) => {
+  const [query, setQuery] = useState("");
+  const groups = useMemo(() => groupParticipants(participants), [participants]);
+  const q = normalize(query.trim());
 
-  useEffect(() => {
-    fetch(`/data/events/${eventId}/participants.json`)
-      .then((r) => r.json())
-      .then((data: Participant[]) => {
-        const groupMap = new Map<string, Participant[]>();
-        data.forEach((p) => {
-          const list = groupMap.get(p.group) || [];
-          list.push(p);
-          groupMap.set(p.group, list);
-        });
+  const visible = q
+    ? groups.filter((g) => g.members.some((m) => normalize(m.name).includes(q)))
+    : groups;
 
-        const sorted = Array.from(groupMap.entries())
-          .map(([leader, members]) => ({
-            leader,
-            members: members.sort((a, b) => {
-              const rp: Record<string, number> = { Lider: 0, Ucenic: 1, Participant: 2 };
-              return (rp[a.role] ?? 9) - (rp[b.role] ?? 9) || a.name.localeCompare(b.name, "ro");
-            }),
-          }))
-          .sort((a, b) => a.leader.localeCompare(b.leader, "ro"));
-
-        setGroups(sorted);
-      })
-      .catch(() => {});
-  }, [eventId]);
-
-  const roleIcon = (role: string) => {
-    if (role === "Lider") return <Crown size={14} className="text-accent" />;
-    if (role === "Ucenic") return <GraduationCap size={14} className="text-primary" />;
-    return <User size={14} className="text-muted-foreground" />;
-  };
+  if (participants.length === 0) {
+    return (
+      <section className="container-site py-12">
+        <h1 className="section-title">Grupe de lucru</h1>
+        <p className="mt-4 text-ink-2">Repartizarea pe grupe va fi publicată în curând.</p>
+      </section>
+    );
+  }
 
   return (
-    <section className="page-section space-y-6">
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-        <h2 className="section-title">Grupe de lucru</h2>
-        <div className="gold-divider mt-2 mb-4" />
+    <section className="container-site py-8 md:py-12">
+      <div className="flex flex-wrap items-end justify-between gap-4 mb-6">
+        <div className="flex flex-col gap-2">
+          <p className="kicker">Grupuri mici</p>
+          <h1 className="section-title">Grupe de lucru</h1>
+          <span className="copper-rule" />
+        </div>
+        <p className="text-sm text-ink-3">
+          {groups.length} grupe · {participants.length} participanți
+        </p>
+      </div>
 
-        <div className="grid md:grid-cols-2 gap-4">
-          {groups.map((group, gi) => (
-            <motion.div
-              key={group.leader}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: gi * 0.05 }}
-              className="bg-card rounded-xl border border-border p-4"
-            >
-              <h3 className="font-display font-semibold text-foreground mb-3 flex items-center gap-2">
-                <Crown size={16} className="text-accent" />
-                Grupul {group.leader}
-              </h3>
-              <div className="space-y-1.5">
-                {group.members.map((m, i) => (
-                  <div
-                    key={i}
-                    className="flex items-center gap-2 text-sm py-1 px-2 rounded hover:bg-muted/50 transition-colors"
-                  >
-                    {roleIcon(m.role)}
-                    <span className={m.role === "Lider" ? "font-semibold text-foreground" : "text-foreground"}>
-                      {m.name}
-                    </span>
-                    <span className="text-xs text-muted-foreground ml-auto">
-                      {m.role !== "Lider" && m.text1 ? m.text1 : ""}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
+      <label className="relative block max-w-md mb-8">
+        <span className="sr-only">Caută un nume</span>
+        <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-3" aria-hidden="true" />
+        <input
+          type="search"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Caută-ți numele sau grupul…"
+          className="w-full h-11 pl-10 pr-3 rounded-sm border border-ink bg-white text-[15px] placeholder:text-ink-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2"
+        />
+      </label>
+
+      {visible.length === 0 ? (
+        <p className="text-ink-2">Niciun participant cu numele „{query}”.</p>
+      ) : (
+        <div className="grid gap-x-10 gap-y-10 md:grid-cols-2 xl:grid-cols-3">
+          {visible.map((g) => (
+            <section key={g.leader} aria-labelledby={`grup-${g.leader}`}>
+              <header className="border-b-2 border-royal pb-2 mb-1 flex items-baseline justify-between gap-3">
+                <h2 id={`grup-${g.leader}`} className="font-display text-[24px] font-medium leading-tight">
+                  Grupul {g.leader}
+                </h2>
+                <span className="text-sm text-ink-3 tabular-nums">{g.members.length}</span>
+              </header>
+              <ol>
+                {g.members.map((m) => {
+                  const hit = q && normalize(m.name).includes(q);
+                  const passages = [m.text1, m.text2].filter(Boolean).join(" · ");
+                  return (
+                    <li
+                      key={m.name}
+                      className={cn(
+                        "flex flex-wrap items-baseline gap-x-3 gap-y-0.5 py-2.5 border-t border-rule",
+                        hit && "bg-copper/10 -mx-2 px-2",
+                      )}
+                    >
+                      <span className={cn("text-[16px]", m.role === "Lider" ? "font-semibold" : "font-medium")}>
+                        {m.name}
+                      </span>
+                      <RoleBadge role={m.role} />
+                      {passages && m.role !== "Lider" && (
+                        <span className="basis-full sm:basis-auto sm:ml-auto text-[13px] text-ink-3 tabular-nums">
+                          {passages}
+                        </span>
+                      )}
+                    </li>
+                  );
+                })}
+              </ol>
+            </section>
           ))}
         </div>
-      </motion.div>
+      )}
     </section>
   );
 };

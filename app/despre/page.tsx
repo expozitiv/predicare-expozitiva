@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import DespreePage from "./DespreePage";
+import { getGalleryImages } from "@/lib/gallery";
 
 const BASE_URL = "https://predicare-expozitiva.ro";
 
@@ -13,10 +14,10 @@ export const metadata: Metadata = {
     description:
       "Descoperă ce este un Atelier de Predicare Expozitivă și metodologia în 7 pași.",
     url: `${BASE_URL}/despre`,
-    images: [{ url: `${BASE_URL}/hero-bible.jpg` }],
+    images: [{ url: `${BASE_URL}/og.png` }],
   },
 };
 
 export default function Page() {
-  return <DespreePage />;
+  return <DespreePage images={getGalleryImages()} />;
 }

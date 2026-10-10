@@ -5,11 +5,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Wordmark } from "./Logo";
+import { cn } from "@/lib/utils";
 
 const navItems = [
-  { label: "Acasă", path: "/" },
   { label: "Evenimente", path: "/evenimente" },
   { label: "Resurse", path: "/resurse" },
+  { label: "Ghid", path: "/ghid" },
   { label: "Despre", path: "/despre" },
   { label: "Contact", path: "/contact" },
 ];
@@ -18,44 +20,44 @@ const SiteHeader = () => {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  const isActive = (path: string) => pathname === path || pathname.startsWith(`${path}/`);
+
   return (
-    <nav className="sticky top-0 z-50 bg-background/90 backdrop-blur-md border-b border-border">
-      <div className="max-w-5xl mx-auto px-6 flex items-center justify-between h-16">
-        <Link
-          href="/"
-          className="font-display text-lg font-bold text-primary tracking-tight"
-        >
-          Predicare expozitivă
-        </Link>
+    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-rule">
+      <div className="container-site flex items-center justify-between h-[68px] gap-6">
+        <Wordmark />
 
         {/* Desktop nav */}
-        <div className="hidden md:flex items-center gap-1">
-          {navItems.map((item) => {
-            const isActive = pathname === item.path;
-            return (
-              <Link
-                key={item.path}
-                href={item.path}
-                className={`relative px-4 py-2 text-sm font-medium transition-colors rounded-md
-                  ${isActive ? "text-primary" : "text-muted-foreground hover:text-foreground"}`}
-              >
-                {item.label}
-                {isActive && (
-                  <motion.div
-                    layoutId="nav-underline"
-                    className="absolute bottom-0 left-2 right-2 h-0.5 bg-accent rounded-full"
-                  />
-                )}
-              </Link>
-            );
-          })}
-        </div>
+        <nav className="hidden md:flex items-center gap-7" aria-label="Navigare principală">
+          {navItems.map((item) => (
+            <Link
+              key={item.path}
+              href={item.path}
+              aria-current={isActive(item.path) ? "page" : undefined}
+              className={cn(
+                "py-1.5 text-[15px] font-medium border-b-2 transition-colors",
+                isActive(item.path)
+                  ? "text-royal border-copper"
+                  : "text-ink-2 border-transparent hover:text-royal",
+              )}
+            >
+              {item.label}
+            </Link>
+          ))}
+          <Link
+            href="/abonare"
+            className="inline-flex items-center h-9 px-4 rounded-sm bg-royal text-white text-sm font-semibold hover:bg-royal-deep transition-colors"
+          >
+            Abonare
+          </Link>
+        </nav>
 
         {/* Mobile toggle */}
         <button
-          className="md:hidden p-2 text-foreground"
+          className="md:hidden -mr-2 w-11 h-11 inline-flex items-center justify-center text-foreground"
           onClick={() => setMobileOpen(!mobileOpen)}
-          aria-label="Toggle menu"
+          aria-label={mobileOpen ? "Închide meniul" : "Deschide meniul"}
+          aria-expanded={mobileOpen}
         >
           {mobileOpen ? <X size={22} /> : <Menu size={22} />}
         </button>
@@ -64,29 +66,40 @@ const SiteHeader = () => {
       {/* Mobile menu */}
       <AnimatePresence>
         {mobileOpen && (
-          <motion.div
+          <motion.nav
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            className="md:hidden overflow-hidden bg-background border-b border-border"
+            transition={{ duration: 0.2 }}
+            className="md:hidden overflow-hidden bg-white border-b border-rule"
+            aria-label="Navigare mobilă"
           >
-            <div className="px-6 py-4 flex flex-col gap-2">
+            <div className="container-site py-3 flex flex-col">
               {navItems.map((item) => (
                 <Link
                   key={item.path}
                   href={item.path}
                   onClick={() => setMobileOpen(false)}
-                  className={`py-2 text-sm font-medium transition-colors
-                    ${pathname === item.path ? "text-primary" : "text-muted-foreground"}`}
+                  className={cn(
+                    "py-3 text-base font-medium border-t border-rule first:border-t-0",
+                    isActive(item.path) ? "text-royal" : "text-ink-2",
+                  )}
                 >
                   {item.label}
                 </Link>
               ))}
+              <Link
+                href="/abonare"
+                onClick={() => setMobileOpen(false)}
+                className="mt-3 mb-2 inline-flex items-center justify-center h-11 rounded-sm bg-royal text-white font-semibold"
+              >
+                Abonare
+              </Link>
             </div>
-          </motion.div>
+          </motion.nav>
         )}
       </AnimatePresence>
-    </nav>
+    </header>
   );
 };
 

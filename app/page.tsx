@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import HomePage from "./HomePage";
+import { getAllEvents } from "@/lib/events";
 
 const BASE_URL = "https://predicare-expozitiva.ro";
 
@@ -13,10 +14,11 @@ export const metadata: Metadata = {
     description:
       "Ateliere de predicare expozitivă în România, în parteneriat cu Charles Simeon Trust.",
     url: BASE_URL,
-    images: [{ url: `${BASE_URL}/hero-bible.jpg` }],
+    images: [{ url: `${BASE_URL}/og.png` }],
   },
 };
 
 export default function Page() {
-  return <HomePage />;
+  const events = getAllEvents();
+  return <HomePage events={events} />;
 }

@@ -1,7 +1,4 @@
-'use client';
-
 import Link from "next/link";
-import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { type LucideIcon } from "lucide-react";
 
@@ -10,7 +7,7 @@ export interface FeaturePlug {
   description: string;
   to: string;
   icon: LucideIcon;
-  /** Use "primary" for filled button, "outline" for outlined. Defaults to first=primary, rest=outline. */
+  /** "primary" pentru buton plin, "outline" pentru contur. Implicit: primul plin, restul contur. */
   variant?: "primary" | "outline";
 }
 
@@ -21,39 +18,26 @@ interface FeaturePlugsProps {
 }
 
 const FeaturePlugs = ({ heading, subtext, plugs }: FeaturePlugsProps) => (
-  <motion.div
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.5 }}
-    className="mt-10 max-w-lg mx-auto text-center space-y-6"
-  >
-    {heading && <h3 className="section-title text-lg">{heading}</h3>}
-    {subtext && <p className="text-muted-foreground">{subtext}</p>}
-    <div className="flex flex-wrap justify-center gap-4">
+  <div className="mt-14 border-t-2 border-royal pt-8 grid gap-6 md:grid-cols-12 md:items-center">
+    <div className="md:col-span-6 flex flex-col gap-2">
+      {heading && <h3 className="section-subtitle">{heading}</h3>}
+      {subtext && <p className="text-ink-2 text-[17px] leading-relaxed">{subtext}</p>}
+    </div>
+    <div className="md:col-start-8 md:col-span-5 flex flex-wrap gap-3 md:justify-end">
       {plugs.map((plug, i) => {
         const isPrimary = plug.variant ? plug.variant === "primary" : i === 0;
         return (
-          <Button
-            key={plug.to}
-            asChild
-            size="lg"
-            variant={isPrimary ? "default" : "outline"}
-            className={
-              isPrimary
-                ? "bg-primary hover:bg-[hsl(var(--navy-dark))] text-primary-foreground"
-                : "border-primary text-primary hover:bg-primary hover:text-primary-foreground"
-            }
-          >
+          <Button key={plug.to} asChild size="lg" variant={isPrimary ? "default" : "outline"}>
             {plug.to.startsWith("http") ? (
-            <a href={plug.to} target="_blank" rel="noopener noreferrer">{plug.title}</a>
-          ) : (
-            <Link href={plug.to}>{plug.title}</Link>
-          )}
+              <a href={plug.to} target="_blank" rel="noopener noreferrer">{plug.title}</a>
+            ) : (
+              <Link href={plug.to}>{plug.title}</Link>
+            )}
           </Button>
         );
       })}
     </div>
-  </motion.div>
+  </div>
 );
 
 export default FeaturePlugs;
